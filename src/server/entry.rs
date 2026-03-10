@@ -3,12 +3,12 @@ use std::process::exit;
 
 use diesel_migrations::{embed_migrations, EmbeddedMigrations, MigrationHarness};
 use dioxus::server::axum::{self};
-use tracing::error;
+use tracing::{error, info};
 use tracing_subscriber::EnvFilter;
 
 use crate::{
+    client::App,
     server::{database::DATABASE, layers::authenticated::run_authenticated_layer},
-    App,
 };
 
 pub fn launch_server() {
@@ -29,9 +29,14 @@ pub fn launch_server() {
         Ok(value) => value,
     };
 
-    if let Err(e) = db.run_pending_migrations(MIGRATIONS) {
-        error!("Failed to run migrations: {e}");
-        exit(1)
+    match db.run_pending_migrations(MIGRATIONS) {
+        Err(e) => {
+            error!("Failed to run migrations: {e}");
+            exit(1)
+        }
+        Ok(value) => {
+            info!("Successfully applied {} migrations", value.len())
+        }
     }
 
     dioxus::serve(|| async move {
