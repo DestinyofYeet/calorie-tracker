@@ -34,16 +34,26 @@
           pkg-config
           wasm-bindgen-cli
 
+          # diesel-cli
+          diesel-cli
+          libpq
+          libmysqlclient
+          sqlite.dev
+
           # lsp
           pango
           atk
           libsoup_3
           gdk-pixbuf
           webkitgtk_4_1
+
+          # linux desktop
+          xdotool
         ];
 
         # uncomment this is you get some kind of ssl error, usually on anything networking related using reqwest
         PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
+        DATABASE_URL = "sqlite://tmp/database.db";
       };
 
       packages.x86_64-linux = {
