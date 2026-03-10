@@ -1,8 +1,8 @@
-use std::{env, sync::Mutex};
+use std::env;
 
 use diesel::{
-    r2d2::{self, ConnectionManager, Pool, PooledConnection},
-    Connection, SqliteConnection,
+    r2d2::{self, ConnectionManager, Pool},
+    SqliteConnection,
 };
 use dioxus::fullstack::Lazy;
 
