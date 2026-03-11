@@ -1,7 +1,8 @@
 .input {
   color: var(--color-text);
-  background: #4f6fb0;
+  background: var(--color-background-1);
   border-radius: 1rem;
-  font-size: 1.1rem;
   padding: 0.5rem;
+
+  border: 2px solid var(--color-accent-1)
 }

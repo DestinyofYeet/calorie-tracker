@@ -1,0 +1,13 @@
+.button {
+  color: var(--color-text);
+  background: var(--color-background-1);
+  border-radius: 1rem;
+  padding: 0.5rem;
+
+  border: 2px solid var(--color-accent-1);
+}
+
+.button:disabled {
+  color: var(--color-background);
+  opacity: 1;
+}

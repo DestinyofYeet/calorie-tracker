@@ -1,4 +1,5 @@
 use crate::client::routes::user::UserCreate;
+use crate::client::routes::user::UserLogin;
 use dioxus::prelude::*;
 
 use crate::client::routes::Landing;
@@ -7,14 +8,21 @@ const VARS_CSS: Asset = asset!("/src/client/assets/css/variables.css");
 const BASE_CSS: Asset = asset!("/src/client/assets/css/base.css");
 
 #[derive(Routable, Clone)]
-enum Route {
+pub enum Route {
     #[route("/")]
     Landing {},
 
     #[route("/user/create")]
     UserCreate {},
+
+    #[route("/user/login")]
+    UserLogin {},
 }
 
+// this is a clippy lie, the code does actually get used
+// but depending on the lsp config, the rust-analyzer only evaluates
+// the server and thinks this code is dead
+#[allow(dead_code)]
 pub fn launch_client() {
     dioxus::launch(App);
 }

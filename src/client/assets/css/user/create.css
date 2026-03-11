@@ -3,15 +3,32 @@
   justify-content: center;
 }
 
-.login_wrapper {
+.create_wrapper {
   display: grid;
   grid-template-columns: center;
-  grid-template-rows: 50vh auto;
-  width: 50vw;
+  grid-template-rows: 30vh auto;
+  width: 20rem;
 }
 
-.login {
+.create {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 1rem;
+}
+
+.spinner_wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1em;
+}
+
+.spinner {
+  width: 2rem;
+  height: 2rem;
+  font-size: 0.5rem;
+}
+
+.error {
+  color: var(--color-error);
 }

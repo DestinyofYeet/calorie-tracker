@@ -40,6 +40,8 @@ pub fn launch_server() {
     }
 
     dioxus::serve(|| async move {
-        Ok(dioxus::server::router(App).layer(axum::middleware::from_fn(run_authenticated_layer)))
+        Ok(
+            dioxus::server::router(App), // .layer(axum::middleware::from_fn(run_authenticated_layer))
+        )
     })
 }
