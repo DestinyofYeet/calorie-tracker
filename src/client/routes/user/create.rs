@@ -2,17 +2,36 @@ use dioxus::prelude::*;
 
 use crate::client::components::TextBox;
 
-static CSS: Asset = asset!(concat!(env!("CSS_ASSET_DIR"), "/user/create.scss"));
-
 #[component]
 pub fn UserCreate() -> Element {
+    #[css_module("/src/client/assets/css/user/create.css")]
+    struct Style;
+
     rsx! {
-        document::Stylesheet {
-            href: CSS
+        div {
+
+            class: Style::wrapper_wrapper,
+
+            div {
+                class: Style::login_wrapper,
+
+                div {}
+
+                div {
+                    class: Style::login,
+
+                    TextBox {
+                        placeholder: "Username"
+                    }
+
+                    TextBox {
+                        placeholder: "Password",
+                        kind: "Password"
+                    }
+                }
+
+            }
         }
 
-        TextBox {
-            placeholder: "Username"
-        }
     }
 }

@@ -1,13 +1,16 @@
 use dioxus::prelude::*;
-use dioxus_style::with_css;
 
-#[with_css(css, "src/client/assets/css/components/text_box.scss")]
-pub fn TextBox(placeholder: String) -> Element {
+#[component]
+pub fn TextBox(placeholder: String, kind: Option<String>) -> Element {
+    #[css_module("/src/client/assets/css/components/text_box.css")]
+    struct Style;
+
     rsx! {
         input {
-            class: Styles::input,
+            class: Style::input,
 
-            placeholder: placeholder
+            placeholder: placeholder,
+            type: if kind.is_some() { kind.unwrap() }
         }
     }
 }

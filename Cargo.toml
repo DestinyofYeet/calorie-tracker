@@ -21,8 +21,7 @@ desktop = ["dioxus/desktop"]
 mobile = ["dioxus/mobile"]
 server = ["dioxus/server", "dep:diesel"]
 
-[profile.dev.package."*"]
-opt-level = "s"
+[profile.dev]
 incremental = true
 
 [profile.release]
