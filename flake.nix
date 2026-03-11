@@ -33,6 +33,8 @@
           rustfmt # formatter
           pkg-config
           wasm-bindgen-cli
+          vscode-css-languageserver
+          binaryen
 
           # diesel-cli
           diesel-cli
@@ -53,7 +55,10 @@
 
         # uncomment this is you get some kind of ssl error, usually on anything networking related using reqwest
         PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
+
+        # needed env variables
         DATABASE_URL = "sqlite://tmp/database.db";
+        CSS_ASSET_DIR = "/src/client/assets/css";
       };
 
       packages.x86_64-linux = {

@@ -9,7 +9,8 @@ edition = "2021"
 [dependencies]
 diesel = { version = "2.3.6", features = ["r2d2", "sqlite", "returning_clauses_for_sqlite_3_35"], optional = true }
 diesel_migrations = { version = "2.3.1", features = ["sqlite"] }
-dioxus = { version = "0.7.1", features = ["fullstack"] }
+dioxus = { version = "0.7.1", features = ["fullstack", "router"] }
+dioxus_style = "0.5.3"
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
 
