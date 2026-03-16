@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 
-use crate::server::get_text;
+use crate::{client::Routes, server::get_text};
 
 #[component]
 pub fn Landing() -> Element {
@@ -18,6 +18,11 @@ pub fn Landing() -> Element {
             }
         } else {
                 "Loading ..."
+        }
+
+        Link {
+            to: Routes::UserLogin {  },
+            "Login"
         }
     }
 }

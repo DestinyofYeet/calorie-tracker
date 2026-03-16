@@ -8,7 +8,7 @@ const VARS_CSS: Asset = asset!("/src/client/assets/css/variables.css");
 const BASE_CSS: Asset = asset!("/src/client/assets/css/base.css");
 
 #[derive(Routable, Clone)]
-pub enum Route {
+pub enum Routes {
     #[route("/")]
     Landing {},
 
@@ -32,6 +32,6 @@ pub fn App() -> Element {
     rsx! {
         document::Stylesheet { href: VARS_CSS }
         document::Stylesheet { href: BASE_CSS }
-        Router::<Route> {}
+        Router::<Routes> {}
     }
 }

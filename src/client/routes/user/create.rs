@@ -3,7 +3,7 @@ use dioxus::prelude::*;
 use crate::{
     client::{
         components::{Button, Spinner, TextBox},
-        Route,
+        Routes,
     },
     server::routes::v1::user::create_user,
 };
@@ -81,7 +81,7 @@ pub fn UserCreate() -> Element {
                                         },
                                         Some(_) => {
                                             let navigator = navigator();
-                                            navigator.replace(Route::UserLogin {});
+                                            navigator.replace(Routes::UserLogin {});
 
                                         }
                                     }
