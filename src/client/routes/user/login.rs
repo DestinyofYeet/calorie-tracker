@@ -25,10 +25,7 @@ pub fn UserLogin() -> Element {
 
     let login_user = move || async move {
         match login_user(email(), password()).await {
-            Ok(token) => {
-                // info!("token: {token}");
-                Some(token)
-            }
+            Ok(_) => Some(()),
             Err(e) => {
                 error.set(e.to_string());
                 None
@@ -72,11 +69,7 @@ pub fn UserLogin() -> Element {
                                 button_disabled.set(true);
                                 spawn(async move {
                                     match login_user().await {
-                                        Some(token) => {
-                                            // let value = HeaderValue::from_str(&token).unwrap();
-                                            // let mut map = HeaderMap::new();
-                                            // map.insert("token", value);
-                                            // dioxus::fullstack::set_request_headers(map);
+                                        Some(_) => {
                                             navigator().replace(Routes::Landing {});
 
                                         },

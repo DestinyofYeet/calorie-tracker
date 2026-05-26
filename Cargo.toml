@@ -16,6 +16,7 @@ tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
 django-rs = { git = "https://code.ole.blue/DestinyofYeet/django-rs.git", optional = true}
 uuid = { version = "1.23.1", features = ["v4"], optional = true }
+tower-cookies = "0.11.0"
 
 [features]
 default = []

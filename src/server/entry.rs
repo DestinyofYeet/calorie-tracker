@@ -9,6 +9,7 @@ use django_rs::{
     },
     tasks::logstrategy::default_strategies::tracing_strategy::TracingStrategy,
 };
+use tower_cookies::CookieManagerLayer;
 use tracing_subscriber::EnvFilter;
 
 use crate::{
@@ -40,7 +41,11 @@ pub fn launch_server() {
     db.migrate_model::<User>().unwrap();
     db.migrate_model::<LoginToken>().unwrap();
 
+    // let auth_middlware = axum::middleware::from_fn(f)
+
     dioxus::serve(|| async move {
-        Ok(dioxus::server::router(App).layer(axum::middleware::from_fn(run_authenticated_layer)))
+        Ok(dioxus::server::router(App)
+            .layer(axum::middleware::from_fn(run_authenticated_layer))
+            .layer(CookieManagerLayer::new()))
     })
 }

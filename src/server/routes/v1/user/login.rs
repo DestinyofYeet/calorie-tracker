@@ -2,12 +2,20 @@ use dioxus::{fullstack::AsStatusCode, prelude::*};
 
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
+use tower_cookies::{
+    cookie::{
+        time::{Duration, OffsetDateTime},
+        SameSite,
+    },
+    Cookie, Cookies,
+};
 
 #[cfg(feature = "server")]
 use {
     crate::server::database::models::login_token::LoginToken,
     crate::server::entry::SERVER,
-    django_rs::chrono::{Months, Utc},
+    django_rs::chrono::TimeDelta,
+    django_rs::chrono::Utc,
     django_rs::{
         models::search::SearchQuery,
         server::database_strategy::{DatabaseStrategy, DatabaseStrategyError},
@@ -60,7 +68,7 @@ impl AsStatusCode for LoginUserError {
     }
 }
 
-#[post("/api/v1/user/login")]
+#[post("/api/v1/user/login", cookies: Cookies)]
 pub async fn login_user(
     provided_email: String,
     provided_password: String,
@@ -105,7 +113,7 @@ pub async fn login_user(
 
     let token = Uuid::new_v4().to_string();
 
-    let offset_time = Utc::now().checked_add_months(Months::new(1)).unwrap();
+    let offset_time = Utc::now().checked_add_signed(TimeDelta::weeks(4)).unwrap();
 
     let mut token = LoginToken {
         id: None,
@@ -116,12 +124,17 @@ pub async fn login_user(
 
     db.save_model(&db.get_connection(), &mut token)?;
 
-    // let mut response = Response::new(());
-    // response
-    //     .headers_mut()
-    //     .insert(SET_COOKIE, HeaderValue::from_str(&token.token).unwrap());
+    let mut time = OffsetDateTime::now_utc();
+    time += Duration::weeks(4);
 
-    // set_respo
+    let mut cookie = Cookie::new("token", token.token.clone());
+    cookie.set_same_site(SameSite::Strict);
+    cookie.set_path("/");
+    cookie.set_expires(time);
+    cookie.set_http_only(true);
+    cookie.set_secure(true);
+
+    cookies.add(cookie);
 
     Ok(())
 }

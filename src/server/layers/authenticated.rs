@@ -6,36 +6,35 @@ use dioxus::{
 use django_rs::{
     chrono::Utc, models::search::SearchQuery, server::database_strategy::DatabaseStrategy,
 };
-use tracing::{debug, error, trace};
+use tower_cookies::Cookies;
+use tracing::error;
 
 use crate::server::{
     database::models::{login_token::LoginToken, user::User},
     entry::SERVER,
 };
 
-static PUBLIC_LIST_STARTS_WITH: [&str; 2] = ["/wasm/", "/assets/"];
+static WHITELIST_STARTS_WITH: [&str; 2] = ["/wasm/", "/assets/"];
 
-static PUBLIC_LIST_EXACT: [&str; 5] = [
+static WHITELIST_EXACT: [&str; 5] = [
     "/",
     "/user/login",
     "/user/create",
-    "/api/v1/user/login",
     "/api/v1/user/create",
+    "/api/v1/user/login",
 ];
 
-pub async fn run_authenticated_layer(request: Request, next: Next) -> Response {
-    debug!("path: {}", request.uri().path());
-    if PUBLIC_LIST_STARTS_WITH
+pub async fn run_authenticated_layer(cookies: Cookies, request: Request, next: Next) -> Response {
+    let uri_path = request.uri().path();
+
+    if WHITELIST_STARTS_WITH
         .iter()
-        .any(|item| request.uri().path().starts_with(item))
+        .any(|item| uri_path.starts_with(item))
     {
         return next.run(request).await;
     }
 
-    if PUBLIC_LIST_EXACT
-        .iter()
-        .any(|item| request.uri().path() == *item)
-    {
+    if WHITELIST_EXACT.contains(&uri_path) {
         return next.run(request).await;
     }
 
@@ -43,11 +42,11 @@ pub async fn run_authenticated_layer(request: Request, next: Next) -> Response {
 
     let invalid_token_header_resp = Response::builder()
         .status(StatusCode::BAD_REQUEST)
-        .body("Invalid token header".into())
+        .body("unauthenticated".into())
         .unwrap();
 
-    let header = match request.headers().get("token").map(|e| e.to_str()) {
-        Some(Ok(e)) => e,
+    let header = match cookies.get("token") {
+        Some(e) => e.value().to_string(),
         _ => return invalid_token_header_resp,
     };
 
@@ -68,7 +67,7 @@ pub async fn run_authenticated_layer(request: Request, next: Next) -> Response {
         return invalid_token_header_resp;
     }
 
-    let user = match db.search_single_model::<User>(
+    let _user = match db.search_single_model::<User>(
         &db.get_connection(),
         SearchQuery::empty().add_constraint(("id", token.user_id)),
     ) {
@@ -84,8 +83,6 @@ pub async fn run_authenticated_layer(request: Request, next: Next) -> Response {
                 .unwrap();
         }
     };
-
-    println!("hi {user:?}");
 
     next.run(request).await
 }
