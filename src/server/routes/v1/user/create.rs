@@ -1,9 +1,10 @@
 use dioxus::{fullstack::AsStatusCode, prelude::*};
+#[cfg(feature = "server")]
+use django_rs::server::database_strategy::DatabaseStrategyError;
+#[cfg(feature = "server")]
+use django_rs::{models::search::SearchQuery, server::database_strategy::DatabaseStrategy};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-
-#[cfg(feature = "server")]
-use crate::server::database::DATABASE;
 
 #[derive(Error, Debug, Serialize, Deserialize)]
 pub enum CreateUserError {
@@ -42,18 +43,18 @@ impl From<ServerFnError> for CreateUserError {
 }
 
 #[cfg(feature = "server")]
-impl From<diesel::result::Error> for CreateUserError {
-    fn from(value: diesel::result::Error) -> Self {
-        error!("Database error: {}", value.to_string());
-        Self::DatabaseError
-    }
-}
-
-#[cfg(feature = "server")]
 impl From<argon2::password_hash::Error> for CreateUserError {
     fn from(value: argon2::password_hash::Error) -> Self {
         error!("Failed to hash password: {}", value.to_string());
         Self::PasswordHash
+    }
+}
+
+#[cfg(feature = "server")]
+impl From<DatabaseStrategyError> for CreateUserError {
+    fn from(value: DatabaseStrategyError) -> Self {
+        error!("Failed to query database: {value}");
+        Self::DatabaseError
     }
 }
 
@@ -83,6 +84,9 @@ pub async fn create_user(
     use argon2::Argon2;
     use argon2::PasswordHasher;
 
+    use crate::server::database::models::user::User;
+    use crate::server::entry::SERVER;
+
     if provided_username.is_empty() {
         return Err(CreateUserError::UsernameEmpty);
     }
@@ -107,36 +111,25 @@ pub async fn create_user(
         .hash_password(provided_password.as_bytes(), &salt)?
         .to_string();
 
-    let mut db = match DATABASE.get().get() {
-        Ok(db) => db,
-        Err(e) => {
-            error!("Failed to get Database lock: {e}");
-            return Err(CreateUserError::GetDatabase);
-        }
+    let db = SERVER.get_database();
+
+    let exists = db.search_single_model::<User>(
+        &db.get_connection(),
+        SearchQuery::empty().add_constraint(("email", &provided_username)),
+    )?;
+
+    if exists.is_some() {
+        return Err(CreateUserError::EmailExists);
+    }
+
+    let mut model = User {
+        id: None,
+        name: provided_username,
+        email: provided_email,
+        hashed_password: hashed_provided_password,
     };
 
-    {
-        use crate::server::database::schema::users::{self, dsl::*};
-        use diesel::insert_into;
-        use diesel::prelude::*;
+    db.save_model(&db.get_connection(), &mut model)?;
 
-        let result = users::table
-            .select(users::id)
-            .filter(users::email.eq(&provided_email))
-            .load::<i32>(&mut db)?;
-
-        if !result.is_empty() {
-            return Err(CreateUserError::EmailExists);
-        }
-
-        insert_into(users)
-            .values((
-                name.eq(&provided_username),
-                email.eq(&provided_email),
-                hashed_password.eq(&hashed_provided_password),
-            ))
-            .execute(&mut db)?;
-
-        Ok(())
-    }
+    Ok(())
 }

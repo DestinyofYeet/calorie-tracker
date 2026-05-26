@@ -8,22 +8,23 @@ edition = "2021"
 
 [dependencies]
 argon2 = { version = "0.5.3", optional = true, features = ["std"] }
-diesel = { version = "2.3.6", features = ["r2d2", "sqlite", "returning_clauses_for_sqlite_3_35"], optional = true }
-diesel_migrations = { version = "2.3.1", features = ["sqlite"] }
 dioxus = { version = "0.7.1", features = ["fullstack", "router"] }
 dioxus_style = "0.5.3"
 serde = { version = "1.0.228", features = ["derive"] }
 thiserror = "2.0.18"
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3.22", features = ["env-filter"] }
+django-rs = { git = "https://code.ole.blue/DestinyofYeet/django-rs.git", optional = true}
+uuid = { version = "1.23.1", features = ["v4"], optional = true }
 
 [features]
 default = []
 web = ["dioxus/web"]
 desktop = ["dioxus/desktop"]
 mobile = ["dioxus/mobile"]
-server = ["dioxus/server", "dep:diesel", "dep:argon2"]
+server = ["dioxus/server", "dep:argon2", "dep:django-rs", "dep:uuid"]
 argon2 = ["dep:argon2"]
+uuid = ["dep:uuid"]
 
 [profile.dev]
 incremental = true

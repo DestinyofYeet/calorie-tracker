@@ -1,5 +1,14 @@
-use crate::client::components::{Button, TextBox};
-use dioxus::prelude::*;
+use crate::{
+    client::{
+        components::{Button, Spinner, TextBox},
+        Routes,
+    },
+    server::routes::v1::user::login_user,
+};
+use dioxus::{
+    fullstack::{HeaderMap, HeaderValue},
+    prelude::*,
+};
 
 #[component]
 pub fn UserLogin() -> Element {
@@ -8,6 +17,24 @@ pub fn UserLogin() -> Element {
 
     let mut email = use_signal(String::new);
     let mut password = use_signal(String::new);
+
+    // dioxus::fullstack::set_request_headers(headers);
+
+    let mut button_disabled = use_signal(|| false);
+    let mut error = use_signal(String::new);
+
+    let login_user = move || async move {
+        match login_user(email(), password()).await {
+            Ok(token) => {
+                // info!("token: {token}");
+                Some(token)
+            }
+            Err(e) => {
+                error.set(e.to_string());
+                None
+            }
+        }
+    };
 
     rsx! {
         div {
@@ -37,9 +64,52 @@ pub fn UserLogin() -> Element {
                         on_input: move |e: Event<FormData>| {password.set(e.value())}
                     }
 
-                    Button {
-                        text: "Login"
+                    if !button_disabled() {
+                        Button {
+                            text: "Login",
+                            disabled: button_disabled,
+                            on_click: move |_| {
+                                button_disabled.set(true);
+                                spawn(async move {
+                                    match login_user().await {
+                                        Some(token) => {
+                                            // let value = HeaderValue::from_str(&token).unwrap();
+                                            // let mut map = HeaderMap::new();
+                                            // map.insert("token", value);
+                                            // dioxus::fullstack::set_request_headers(map);
+                                            navigator().replace(Routes::Landing {});
+
+                                        },
+                                        None => {
+                                            button_disabled.set(false);
+                                        },
+                                    }
+                                });
+                            }
+                        }
+
+                        if !error().is_empty() {
+                            p {
+                                class: Style::error,
+
+                                {error()}
+                            }
+                        }
+                    } else {
+                        div {
+                            class: Style::spinner_wrapper,
+                            p {
+                                style: "margin: 0;",
+                                "Logging in"
+                            }
+                            div {
+                                class: Style::spinner,
+
+                                Spinner {}
+                            }
+                        }
                     }
+
                 }
             }
         }

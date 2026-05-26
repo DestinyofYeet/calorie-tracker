@@ -1,5 +1,3 @@
-use dioxus::prelude::*;
-
 mod client;
 mod server;
 

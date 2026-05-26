@@ -25,7 +25,7 @@
         PKG_CONFIG_PATH = "${pkgs.openssl.dev}/lib/pkgconfig";
 
         # needed env variables
-        DATABASE_URL = "sqlite://tmp/database.db";
+        DATABASE_URL = "./tmp/database.db";
         CSS_ASSET_DIR = "/src/client/assets/css";
       };
 

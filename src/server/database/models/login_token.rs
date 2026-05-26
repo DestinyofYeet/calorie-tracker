@@ -1,4 +1,5 @@
 use django_rs::{
+    chrono::{DateTime, Utc},
     django_rs_macro::{FromIter, SaveData},
     models::{
         column::{ColumnType, CreateColumn, CreateOptions},
@@ -9,15 +10,15 @@ use django_rs::{
 };
 
 #[derive(FromIter, Debug, SaveData)]
-pub struct User {
+pub struct LoginToken {
     pub id: Option<i64>,
-    pub name: String,
-    pub email: String,
-    pub hashed_password: String,
+    pub user_id: i64,
+    pub token: String,
+    pub expires_at: DateTime<Utc>,
 }
 
-impl Model for User {
-    const TABLE_NAME: &'static str = "User";
+impl Model for LoginToken {
+    const TABLE_NAME: &'static str = "LoginTokens";
 
     fn get_migration() -> Vec<django_rs::models::ModelIteration> {
         vec![ModelIteration::Create(vec![
@@ -27,18 +28,18 @@ impl Model for User {
                 CreateOptions::default().set_primary_key(),
             ),
             CreateColumn::new(
-                "name",
+                "user_id",
+                ColumnType::Integer,
+                CreateOptions::default().set_non_nullable(),
+            ),
+            CreateColumn::new(
+                "token",
                 ColumnType::String,
                 CreateOptions::default().set_non_nullable(),
             ),
             CreateColumn::new(
-                "email",
-                ColumnType::String,
-                CreateOptions::default().set_non_nullable().set_unique(),
-            ),
-            CreateColumn::new(
-                "hashed_password",
-                ColumnType::String,
+                "expires_at",
+                ColumnType::Date,
                 CreateOptions::default().set_non_nullable(),
             ),
         ])]
@@ -49,6 +50,6 @@ impl Model for User {
     }
 
     fn set_id(&mut self, id: i64) {
-        self.id = Some(id);
+        self.id = Some(id)
     }
 }

@@ -35,4 +35,8 @@ with pkgs;
 
   # linux desktop
   xdotool
+
+  # linker
+  clang
+  wild
 ]
