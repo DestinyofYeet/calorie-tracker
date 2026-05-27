@@ -1,3 +1,5 @@
+pub mod is_authed;
+
 mod create;
 mod login;
 

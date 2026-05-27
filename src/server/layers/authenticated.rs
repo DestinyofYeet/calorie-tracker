@@ -16,12 +16,13 @@ use crate::server::{
 
 static WHITELIST_STARTS_WITH: [&str; 2] = ["/wasm/", "/assets/"];
 
-static WHITELIST_EXACT: [&str; 5] = [
+static WHITELIST_EXACT: [&str; 6] = [
     "/",
     "/user/login",
     "/user/create",
     "/api/v1/user/create",
     "/api/v1/user/login",
+    "/api/v1/user/is_authed",
 ];
 
 pub async fn run_authenticated_layer(cookies: Cookies, request: Request, next: Next) -> Response {

@@ -70,7 +70,6 @@ pub fn UserCreate() -> Element {
 
                     if !button_disabled() {
                         Button {
-                            text: "Register",
                             disabled: button_disabled,
                             on_click: move |_| {
                                 button_disabled.set(true);
@@ -86,12 +85,14 @@ pub fn UserCreate() -> Element {
                                         }
                                     }
                                 });
-                            }
+                            },
+
+                            "Register"
                         }
 
                         if !error().is_empty() {
                             p {
-                                class: Style::error,
+                                class: "error",
 
                                 {error()}
                             }

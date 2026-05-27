@@ -28,7 +28,3 @@
   height: 2rem;
   font-size: 0.5rem;
 }
-
-.error {
-  color: var(--color-error);
-}

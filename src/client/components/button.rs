@@ -1,10 +1,11 @@
 use dioxus::prelude::*;
+use dioxus_free_icons::{Icon, IconProps, IconShape};
 
 #[component]
 pub fn Button(
-    text: String,
     on_click: Option<Callback<MouseEvent>>,
     disabled: Option<Signal<bool>>,
+    children: Element,
 ) -> Element {
     #[css_module("/src/client/assets/css/components/button.css")]
     struct Style;
@@ -18,7 +19,7 @@ pub fn Button(
 
             disabled: disabled,
 
-            {text}
+            {children}
         }
     }
 }

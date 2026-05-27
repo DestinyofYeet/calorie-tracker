@@ -45,6 +45,10 @@ pub fn UserLogin() -> Element {
                 div {
                     class: Style::create,
 
+                    "Login to Calorie-Tracker"
+
+                    div {}
+
                     "Email"
 
                     TextBox {
@@ -63,7 +67,6 @@ pub fn UserLogin() -> Element {
 
                     if !button_disabled() {
                         Button {
-                            text: "Login",
                             disabled: button_disabled,
                             on_click: move |_| {
                                 button_disabled.set(true);
@@ -78,12 +81,14 @@ pub fn UserLogin() -> Element {
                                         },
                                     }
                                 });
-                            }
+                            },
+
+                            "Login"
                         }
 
                         if !error().is_empty() {
                             p {
-                                class: Style::error,
+                                class: "error",
 
                                 {error()}
                             }

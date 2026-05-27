@@ -1,3 +1,4 @@
+use crate::client::routes::application::start::ApplicationStart;
 use crate::client::routes::user::UserCreate;
 use crate::client::routes::user::UserLogin;
 use dioxus::prelude::*;
@@ -17,6 +18,9 @@ pub enum Routes {
 
     #[route("/user/login")]
     UserLogin {},
+
+    #[route("/application")]
+    ApplicationStart {},
 }
 
 // this is a clippy lie, the code does actually get used

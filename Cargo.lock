@@ -411,6 +411,7 @@ version = "0.1.0"
 dependencies = [
  "argon2",
  "dioxus",
+ "dioxus-free-icons",
  "dioxus_style",
  "django-rs",
  "serde",
@@ -1222,6 +1223,15 @@ dependencies = [
  "serde",
  "serde_json",
  "tracing",
+]
+
+[[package]]
+name = "dioxus-free-icons"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "28d356e0f9edad0930bc1cc76744360c0ecca020cb943acaadf42cb774f28284"
+dependencies = [
+ "dioxus",
 ]
 
 [[package]]

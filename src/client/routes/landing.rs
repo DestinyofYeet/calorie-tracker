@@ -1,28 +1,30 @@
 use dioxus::prelude::*;
 
-use crate::{client::Routes, server::get_text};
+use crate::{
+    client::Routes,
+    server::{get_text, routes::v1::user::is_authed::is_user_authed},
+};
 
 #[component]
 pub fn Landing() -> Element {
-    let text = use_resource(move || async move { get_text().await });
+    // let text = use_resource(move || async move { get_text().await });
+    let is_authed = use_resource(move || async move { is_user_authed().await });
+
+    let nav = navigator();
 
     rsx! {
-        if let Some(value) = text.read().as_ref() {
-            match value {
-                Ok(value) => {
-                    value.to_string()
+        match is_authed.read().as_ref() {
+            Some(Ok(value)) => match value {
+                true => {
+                    nav.replace(Routes::ApplicationStart {});
+                    "Authed."
                 },
-                Err(e) => {
-                        e.to_string()
+                false => {
+                    nav.replace(Routes::UserLogin {  } );
+                    "You are being redirected for login"
                 },
-            }
-        } else {
-                "Loading ..."
-        }
-
-        Link {
-            to: Routes::UserLogin {  },
-            "Login"
+            },
+            _ => "Checking for auth...",
         }
     }
 }
