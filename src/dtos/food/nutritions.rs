@@ -2,25 +2,27 @@ use std::{convert::Infallible, str::FromStr, string::ParseError};
 
 use thiserror::Error;
 
+#[derive(Debug)]
 pub struct Nutritions {
-    energy: NutritionEnergy,
-    fat: NutritionValue,
-    carbohydrates: NutritionValue,
-    salt: NutritionValue,
-    proteins: NutritionValue,
+    pub energy: NutritionEnergy,
+    pub fat: NutritionValueType,
+    pub serving_size: NutritionValueType,
+    pub carbohydrates: NutritionValueType,
+    pub salt: NutritionValueType,
+    pub proteins: NutritionValueType,
 
-    extra_values: Vec<NutritionValue>,
+    pub extra_values: Vec<NutritionValue>,
 }
 
+#[derive(Debug)]
 pub enum NutritionValueType {
     Gram(f64),
     Kilogram(f64),
-    Percent(f64),
 }
 
 impl NutritionValueType {
     pub fn get_options() -> Vec<(String, String)> {
-        [("g", "gram"), ("%", "percent"), ("kg", "kilogram")]
+        [("g", "gram"), ("kg", "kilogram")]
             .iter()
             .map(|(key, value)| (key.to_string(), value.to_string()))
             .collect()
@@ -35,23 +37,41 @@ pub enum ValueParseError {
     #[error("Invalid value: {0}")]
     InvalidValue(String),
 }
-impl TryFrom<(&str, &str)> for NutritionValueType {
+
+impl TryFrom<(String, f64)> for NutritionValueType {
     type Error = ValueParseError;
 
-    fn try_from(value: (&str, &str)) -> Result<Self, Self::Error> {
+    fn try_from(value: (String, f64)) -> Result<Self, Self::Error> {
         let (key, value) = value;
-        let value: f64 = value
-            .parse()
-            .map_err(|e: std::num::ParseFloatError| ValueParseError::InvalidValue(e.to_string()))?;
-        match key {
-            "g" => Ok(Self::Gram(value)),
-            "kg" => Ok(Self::Kilogram(value)),
-            "%" => Ok(Self::Percent(value / 100.0)),
-            _ => Err(ValueParseError::InvalidKey(key.to_string())),
+        match key.as_str() {
+            "gram" => Ok(Self::Gram(value)),
+            "kilogram" => Ok(Self::Kilogram(value)),
+            _ => Err(ValueParseError::InvalidKey(key)),
         }
     }
 }
 
+impl TryFrom<(String, String)> for NutritionValueType {
+    type Error = ValueParseError;
+
+    fn try_from(value: (String, String)) -> Result<Self, Self::Error> {
+        let (key, value) = value;
+
+        let value = if let Ok(value) = value.parse::<i64>().map(|e| e as f64) {
+            value
+        } else {
+            value
+                .parse::<f64>()
+                .map_err(|e: std::num::ParseFloatError| {
+                    ValueParseError::InvalidValue(e.to_string())
+                })?
+        };
+
+        Self::try_from((key, value))
+    }
+}
+
+#[derive(Debug)]
 pub struct NutritionEnergy {
     kcal: f64,
 }
@@ -68,6 +88,7 @@ impl NutritionEnergy {
     }
 }
 
+#[derive(Debug)]
 pub struct NutritionValue {
     key: String,
     value: NutritionValueType,
