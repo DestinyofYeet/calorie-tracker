@@ -1,7 +1,7 @@
-use crate::server::dtos::food::Nutritions;
+use crate::dtos::food::Nutritions;
 
 pub struct Food {
-    id: i64,
+    id: Option<i64>,
     name: String,
     nutritions: Nutritions,
 }

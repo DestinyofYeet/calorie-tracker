@@ -7,5 +7,3 @@ mod database;
 pub mod entry;
 
 pub mod routes;
-
-pub mod dtos;

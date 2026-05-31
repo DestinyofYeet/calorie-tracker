@@ -10,7 +10,7 @@ use tower_cookies::{
     Cookie, Cookies,
 };
 
-use crate::server::dtos::LoginUser;
+use crate::dtos::LoginUser;
 
 #[cfg(feature = "server")]
 use {

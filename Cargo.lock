@@ -553,6 +553,7 @@ dependencies = [
  "argon2",
  "dioxus",
  "dioxus-free-icons",
+ "dioxus-html",
  "dioxus-icons",
  "dioxus-primitives",
  "dioxus_style",
@@ -1951,7 +1952,7 @@ dependencies = [
 [[package]]
 name = "django-rs"
 version = "0.1.0"
-source = "git+https://code.ole.blue/DestinyofYeet/django-rs.git#76ac9f5e87e94f1e53c802d2ba161dab6c611621"
+source = "git+https://code.ole.blue/DestinyofYeet/django-rs.git#4c9e39875076be2d1498c073027307983b4ba2d1"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1961,6 +1962,7 @@ dependencies = [
  "r2d2_sqlite",
  "rand 0.10.1",
  "rusqlite",
+ "serde",
  "thiserror 2.0.18",
  "tracing",
  "uuid",
@@ -1969,7 +1971,7 @@ dependencies = [
 [[package]]
 name = "django-rs-macro"
 version = "0.1.0"
-source = "git+https://code.ole.blue/DestinyofYeet/django-rs.git#76ac9f5e87e94f1e53c802d2ba161dab6c611621"
+source = "git+https://code.ole.blue/DestinyofYeet/django-rs.git#4c9e39875076be2d1498c073027307983b4ba2d1"
 dependencies = [
  "quote",
  "syn 2.0.117",

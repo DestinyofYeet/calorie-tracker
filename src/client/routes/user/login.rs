@@ -3,7 +3,8 @@ use crate::{
         components::{Button, Spinner, TextBox},
         Routes,
     },
-    server::{dtos::LoginUser, routes::v1::user::login_user},
+    dtos::LoginUser,
+    server::routes::v1::user::login_user,
 };
 use dioxus::prelude::*;
 
@@ -95,7 +96,7 @@ pub fn UserLogin() -> Element {
                             div { class: Style::spinner, Spinner {} }
                         }
                     }
-                
+
                 }
             }
         }

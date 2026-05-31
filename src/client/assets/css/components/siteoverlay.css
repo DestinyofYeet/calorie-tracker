@@ -22,18 +22,6 @@
   text-decoration: none;
 }
 
-.sidebarblackout {
-  width: 100vw;
-  height: 100vw;
-
-  position: fixed;
-  top: 0px;
-
-  background-color: rgba(0, 0, 0, 50%);
-
-  z-index: 1;
-}
-
 .sidebar {
   width: 16rem;
 

@@ -4,7 +4,6 @@ use crate::client::routes::application::consumption::ConsumptionAdd;
 use crate::client::routes::application::start::ApplicationStart;
 use crate::client::routes::user::UserCreate;
 use crate::client::routes::user::UserLogin;
-use crate::server::routes::v1::user::is_authed::is_user_authed;
 use dioxus::prelude::*;
 
 use crate::client::routes::Landing;

@@ -1,6 +1,9 @@
 use dioxus::prelude::*;
 
-use crate::client::{components::Button, Routes};
+use crate::client::{
+    components::{Blackout, Button},
+    Routes,
+};
 use dioxus_free_icons::{
     icons::ld_icons::{LdSquareChevronLeft, LdSquareChevronRight},
     Icon,
@@ -38,11 +41,8 @@ pub fn SiteOverlay(children: Element) -> Element {
             {children}
         }
 
-        div {
-            class: Style::sidebarblackout,
-
-            style: if is_expanded() { "display: block;" },
-            style: if !is_expanded() { "display: none;" },
+        Blackout {
+            enabled: is_expanded,
         }
 
         div {
@@ -64,7 +64,7 @@ pub fn SiteOverlay(children: Element) -> Element {
                         fill: "white",
                         icon: LdSquareChevronLeft,
                     }
-                
+
                 }
 
                 h3 {

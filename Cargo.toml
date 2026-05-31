@@ -20,13 +20,14 @@ tower-cookies = "0.11.0"
 dioxus-free-icons = { version = "0.10.0", features = ["lucide"] }
 dioxus-primitives = { git = "https://github.com/DioxusLabs/components", version = "0.0.1", default-features = false }
 dioxus-icons = { version = "0.1.0", default-features = false }
+dioxus-html = { version = "0.7.9", features = ["serialize"] }
 
 [features]
 default = []
 web = ["dioxus/web"]
 desktop = ["dioxus/desktop"]
 mobile = ["dioxus/mobile"]
-server = ["dioxus/server", "dep:argon2", "dep:django-rs", "dep:uuid"]
+server = ["dioxus/server", "argon2", "dep:django-rs", "uuid"]
 argon2 = ["dep:argon2"]
 uuid = ["dep:uuid"]
 

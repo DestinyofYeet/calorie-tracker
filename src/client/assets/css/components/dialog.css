@@ -1,0 +1,22 @@
+.dialog {
+  background-color: var(--color-background);
+  color: var(--color-text);
+
+  z-index: 1;
+
+  flex-direction: column;
+  justify-content: center;
+
+  text-align: center;
+  gap: 1rem;
+
+  border-color: var(--color-accent-1);
+  border-radius: 10px;
+
+  padding: 2rem;
+
+}
+
+.dialog:open {
+  display: flex;
+}

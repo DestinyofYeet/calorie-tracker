@@ -1,4 +1,5 @@
 mod client;
+mod dtos;
 mod server;
 
 fn main() {

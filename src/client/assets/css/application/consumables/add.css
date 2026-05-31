@@ -1,14 +1,15 @@
 .formwrapper {
   display: flex;
+  flex-direction: column;
+  align-items: center;
 
   margin-top: 5rem;
-
-  justify-content: center;
 }
 
 .form {
-  display: flex;
-  gap: 2rem;
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 1rem;
 
   align-items: center;
   justify-content: center;

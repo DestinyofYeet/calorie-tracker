@@ -6,7 +6,10 @@ pub fn TextBox(
     kind: Option<String>,
     on_input: Option<Callback<Event<FormData>>>,
     disabled_signal: Option<Signal<bool>>,
+    required: Option<bool>,
+    initial_value: Option<String>,
     id: Option<String>,
+    name: Option<String>,
 ) -> Element {
     #[css_module("/src/client/assets/css/components/text_box.css")]
     struct Style;
@@ -16,10 +19,12 @@ pub fn TextBox(
     rsx! {
         input {
             class: Style::input,
-            initial_value: "",
+            initial_value,
+            required,
 
             disabled,
             id,
+            name,
 
             placeholder,
             r#type: if kind.is_some() { kind.unwrap() },

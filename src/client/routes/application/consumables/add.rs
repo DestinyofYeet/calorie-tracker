@@ -1,21 +1,147 @@
 use dioxus::prelude::*;
+use serde::{Deserialize, Serialize};
 
-use crate::client::components::TextBox;
+use crate::{
+    client::components::{Button, Dialog, Select, Spacer, TextBox},
+    dtos::food::NutritionValueType,
+};
+
+#[derive(Deserialize, Serialize, Debug)]
+pub struct ConsumablesForm {
+    name: String,
+    serving_size: String,
+    serving_size_type: String,
+    energy: String,
+    fat: String,
+    fat_type: String,
+    carbohydrates: String,
+    carbohydrates_type: String,
+    salt: String,
+    salt_type: String,
+    proteins: String,
+    proteins_type: String,
+}
 
 #[component]
 pub fn ConsumablesAdd() -> Element {
     #[css_module("/src/client/assets/css/application/consumables/add.css")]
     struct Style;
 
-    rsx! {
-        div { class: Style::formwrapper,
+    let mut dialog_open = use_signal(|| false);
+    let mut dialog_text = use_signal(String::new);
 
-            form { class: Style::form,
+    rsx! {
+        Dialog {
+            text: dialog_text,
+            open: dialog_open,
+        }
+
+        form {
+            class: Style::formwrapper,
+
+            onsubmit: move |evt: FormEvent| async move {
+                evt.prevent_default();
+
+                let values: ConsumablesForm = match evt.parsed_values() {
+                    Ok(value) => value,
+                    Err(e) => {
+                        dialog_text.set(format!("Failed to parse form:\n{e}"));
+                        dialog_open.set(true);
+                        return;
+                    },
+                };
+
+                info!("{:?}", values);
+
+            },
+
+            h3 { "Add a consumable" }
+
+            div { class: Style::form,
 
                 label { "Name" }
 
-                TextBox { id: "name", placeholder: "name" }
+                TextBox { name: "name", placeholder: "Name", required: true,}
+
+                p {}
+
+                p {}
+
+                p {
+                    "Serving Values"
+                }
+
+                p {}
+
+                label { "Serving size" }
+
+                TextBox { name: "serving_size", placeholder: "0", required: true}
+
+                Select {
+                    name: "serving_size_type",
+                    required: true,
+
+                    options: NutritionValueType::get_options().into_iter().filter(|(_, value)| value != "percent").collect(),
+                }
+
+                label { "Energy" }
+
+                TextBox { name: "energy", placeholder: "Energy", required: true}
+
+                Select {
+                    name: "energy-type",
+                    required: true,
+
+                    options: vec![("kcal", "true"), ("kJ", "false")],
+                }
+
+                label { "Fat" }
+
+                TextBox { name: "fat", placeholder: "0.0", required: true}
+
+                Select {
+                    name: "fat_type",
+                    required: true,
+
+                    options: NutritionValueType::get_options(),
+                }
+
+                label { "Carbohydrates" }
+
+                TextBox { name: "carbohydrates", placeholder: "0.0", required: true }
+
+                Select {
+                    name: "carbohydrates_type",
+                    required: true,
+                    options: NutritionValueType::get_options(),
+                }
+
+                label { "Salt" }
+
+                TextBox { name: "salt", placeholder: "0.0", required: true }
+
+                Select {
+                    name: "salt_type",
+                    required: true,
+
+                    options: NutritionValueType::get_options(),
+                }
+
+                label { "Proteins" }
+
+                TextBox { name: "proteins", placeholder: "0.0", required: true }
+
+                Select {
+                    name: "proteins_type",
+                    required: true,
+
+                    options: NutritionValueType::get_options(),
+                }
             }
+
+            Spacer { rem: 2 }
+
+            Button { "Create consumable" }
         }
     }
 }

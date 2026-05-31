@@ -5,7 +5,8 @@ use crate::{
         components::{Button, Spinner, TextBox},
         Routes,
     },
-    server::{dtos::CreateUser, routes::v1::user::create_user},
+    dtos::CreateUser,
+    server::routes::v1::user::create_user,
 };
 
 #[component]
@@ -99,7 +100,7 @@ pub fn UserCreate() -> Element {
                         }
                     }
                 }
-            
+
             }
         }
 

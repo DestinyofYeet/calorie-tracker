@@ -6,7 +6,7 @@ use django_rs::{models::search::SearchQuery, server::database_strategy::Database
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-use crate::server::dtos::CreateUser;
+use crate::dtos::CreateUser;
 
 #[derive(Error, Debug, Serialize, Deserialize)]
 pub enum CreateUserError {
