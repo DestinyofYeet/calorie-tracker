@@ -1,5 +1,6 @@
 pub mod is_authed;
 
+pub mod consumables;
 mod create;
 mod login;
 

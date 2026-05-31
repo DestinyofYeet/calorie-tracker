@@ -1,8 +1,9 @@
 use std::{convert::Infallible, str::FromStr, string::ParseError};
 
+use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Nutritions {
     pub energy: NutritionEnergy,
     pub fat: NutritionValueType,
@@ -14,7 +15,7 @@ pub struct Nutritions {
     pub extra_values: Vec<NutritionValue>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Deserialize, Serialize)]
 pub enum NutritionValueType {
     Gram(f64),
     Kilogram(f64),
@@ -71,7 +72,7 @@ impl TryFrom<(String, String)> for NutritionValueType {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct NutritionEnergy {
     kcal: f64,
 }
@@ -88,7 +89,7 @@ impl NutritionEnergy {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct NutritionValue {
     key: String,
     value: NutritionValueType,

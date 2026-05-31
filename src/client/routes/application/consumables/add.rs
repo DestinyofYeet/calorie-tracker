@@ -3,7 +3,8 @@ use serde::{Deserialize, Serialize};
 
 use crate::{
     client::components::{Button, Dialog, Select, Spacer, TextBox},
-    dtos::food::{Food, NutritionEnergy, NutritionValueType, Nutritions, ValueParseError},
+    dtos::food::{Consumable, NutritionEnergy, NutritionValueType, Nutritions, ValueParseError},
+    server::routes::v1::user::consumables::create_consumable,
 };
 
 #[derive(Deserialize, Serialize, Debug)]
@@ -94,13 +95,19 @@ pub fn ConsumablesAdd() -> Element {
                     },
                 };
 
-                let food = Food {
+                let consumable = Consumable {
                     id: None,
                     name: values.name,
                     nutritions
                 };
 
-                info!("{:?}", food);
+                match create_consumable(consumable).await {
+                    Ok(_) => {},
+                    Err(e) => {
+                        dialog_text.set(format!("Failed to save consumable: {e}"));
+                        dialog_open.set(true);
+                    },
+                }
 
             },
 
