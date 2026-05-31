@@ -6,6 +6,8 @@ use django_rs::{models::search::SearchQuery, server::database_strategy::Database
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
+use crate::server::dtos::CreateUser;
+
 #[derive(Error, Debug, Serialize, Deserialize)]
 pub enum CreateUserError {
     #[error("Failed to get database!")]
@@ -75,11 +77,7 @@ impl AsStatusCode for CreateUserError {
 }
 
 #[post("/api/v1/user/create")]
-pub async fn create_user(
-    provided_username: String,
-    provided_email: String,
-    provided_password: String,
-) -> Result<(), CreateUserError> {
+pub async fn create_user(data: CreateUser) -> Result<(), CreateUserError> {
     use argon2::password_hash::{rand_core::OsRng, SaltString};
     use argon2::Argon2;
     use argon2::PasswordHasher;
@@ -87,20 +85,20 @@ pub async fn create_user(
     use crate::server::database::models::user::User;
     use crate::server::entry::SERVER;
 
-    if provided_username.is_empty() {
+    if data.username.is_empty() {
         return Err(CreateUserError::UsernameEmpty);
     }
 
-    if provided_email.is_empty() {
+    if data.email.is_empty() {
         return Err(CreateUserError::EmailEmpty);
     }
 
-    if provided_password.is_empty() {
+    if data.password.is_empty() {
         return Err(CreateUserError::PasswordEmpty);
     }
 
     // very rudamentary email checking
-    if !provided_email.contains("@") || !provided_email.contains(".") {
+    if !data.email.contains("@") || !data.email.contains(".") {
         return Err(CreateUserError::EmailInvalid);
     }
 
@@ -108,14 +106,14 @@ pub async fn create_user(
     let argon2 = Argon2::default();
 
     let hashed_provided_password = argon2
-        .hash_password(provided_password.as_bytes(), &salt)?
+        .hash_password(data.password.as_bytes(), &salt)?
         .to_string();
 
     let db = SERVER.get_database();
 
     let exists = db.search_single_model::<User>(
         &db.get_connection(),
-        SearchQuery::empty().add_constraint(("email", &provided_username)),
+        SearchQuery::empty().add_constraint(("email", &data.email)),
     )?;
 
     if exists.is_some() {
@@ -124,8 +122,8 @@ pub async fn create_user(
 
     let mut model = User {
         id: None,
-        name: provided_username,
-        email: provided_email,
+        name: data.username,
+        email: data.email,
         hashed_password: hashed_provided_password,
     };
 

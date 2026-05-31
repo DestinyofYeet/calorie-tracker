@@ -1,5 +1,4 @@
 use dioxus::prelude::*;
-use dioxus_free_icons::{Icon, IconProps, IconShape};
 
 #[component]
 pub fn Button(
@@ -15,9 +14,13 @@ pub fn Button(
     rsx! {
         button {
             class: Style::button,
-            onclick: move |evt| if let Some(callback) = on_click { callback.call(evt)},
+            onclick: move |evt| {
+                if let Some(callback) = on_click {
+                    callback.call(evt)
+                }
+            },
 
-            disabled: disabled,
+            disabled,
 
             {children}
         }

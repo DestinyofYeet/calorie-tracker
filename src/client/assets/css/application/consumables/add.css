@@ -1,0 +1,15 @@
+.formwrapper {
+  display: flex;
+
+  margin-top: 5rem;
+
+  justify-content: center;
+}
+
+.form {
+  display: flex;
+  gap: 2rem;
+
+  align-items: center;
+  justify-content: center;
+}

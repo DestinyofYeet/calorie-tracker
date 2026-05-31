@@ -6,8 +6,6 @@ pub fn Spinner() -> Element {
     struct Style;
 
     rsx! {
-        div {
-            class: Style::spinner
-        }
+        div { class: Style::spinner }
     }
 }

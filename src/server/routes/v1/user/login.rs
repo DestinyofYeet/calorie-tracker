@@ -10,6 +10,8 @@ use tower_cookies::{
     Cookie, Cookies,
 };
 
+use crate::server::dtos::LoginUser;
+
 #[cfg(feature = "server")]
 use {
     crate::server::database::models::login_token::LoginToken,
@@ -69,18 +71,15 @@ impl AsStatusCode for LoginUserError {
 }
 
 #[post("/api/v1/user/login", cookies: Cookies)]
-pub async fn login_user(
-    provided_email: String,
-    provided_password: String,
-) -> Result<(), LoginUserError> {
+pub async fn login_user(data: LoginUser) -> Result<(), LoginUserError> {
     use crate::server::database::models::user::User;
     use argon2::{Argon2, PasswordHash, PasswordVerifier};
 
-    if provided_email.is_empty() {
+    if data.email.is_empty() {
         return Err(LoginUserError::EmailEmpty);
     }
 
-    if provided_password.is_empty() {
+    if data.password.is_empty() {
         return Err(LoginUserError::PasswordEmpty);
     }
 
@@ -88,7 +87,7 @@ pub async fn login_user(
 
     let user = db.search_single_model::<User>(
         &db.get_connection(),
-        SearchQuery::empty().add_constraint(("email", &provided_email)),
+        SearchQuery::empty().add_constraint(("email", &data.email)),
     )?;
 
     let user = match user {
@@ -103,7 +102,7 @@ pub async fn login_user(
     })?;
 
     if argon
-        .verify_password(provided_password.as_bytes(), &parsed_hash)
+        .verify_password(data.password.as_bytes(), &parsed_hash)
         .is_err()
     {
         return Err(LoginUserError::InvalidEmailOrPassword);

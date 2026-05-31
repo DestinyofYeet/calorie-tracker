@@ -1,26 +1,23 @@
-use std::rc::Rc;
-
 use dioxus::prelude::*;
 
-use crate::client::components::Button;
+use crate::client::{components::Button, Routes};
 use dioxus_free_icons::{
-    icons::ld_icons::{LdMenu, LdSquareChevronLeft, LdSquareChevronRight},
+    icons::ld_icons::{LdSquareChevronLeft, LdSquareChevronRight},
     Icon,
 };
 
 #[component]
-pub fn SideBar(children: Element) -> Element {
-    #[css_module("/src/client/assets/css/components/sidebar.css")]
+pub fn SiteOverlay(children: Element) -> Element {
+    #[css_module("/src/client/assets/css/components/siteoverlay.css")]
     struct Style;
 
     let mut is_expanded = use_signal(|| false);
 
+    let title = "Calorie Tracker";
+
     rsx! {
         div {
-            class: Style::toplevel,
-
-            div {
-                class: Style::header,
+            div { class: Style::header,
 
                 Button {
                     on_click: move |_| {
@@ -31,9 +28,11 @@ pub fn SideBar(children: Element) -> Element {
                         width: 20,
                         height: 20,
                         fill: "white",
-                        icon: LdSquareChevronRight
+                        icon: LdSquareChevronRight,
                     }
                 }
+
+                Link { to: Routes::Landing {}, {title} }
             }
 
             {children}
@@ -52,12 +51,7 @@ pub fn SideBar(children: Element) -> Element {
             style: if is_expanded() { "display: block;" },
             style: if !is_expanded() { "display: none;" },
 
-            div {
-                class: Style::sidebarheader,
-
-                h3 {
-                    "Calorie Tracker"
-                }
+            div { class: Style::sidebarheader,
 
                 Button {
                     on_click: move |_| {
@@ -70,23 +64,36 @@ pub fn SideBar(children: Element) -> Element {
                         fill: "white",
                         icon: LdSquareChevronLeft,
                     }
+                
+                }
 
+                h3 {
+                    Link { to: Routes::ApplicationStart {}, {title} }
                 }
             }
 
-            div {
-                class: Style::sidebaritems,
+            div { class: Style::sidebaritems,
 
-                p {
-                    "Dashboard"
+                p { "Dashboard" }
+
+                Link {
+
+                    to: Routes::ConsumptionAdd {},
+                    onclick: move |_| {
+                        is_expanded.set(false);
+                    },
+
+                    "[DEV] Record consumption"
                 }
 
-                p {
-                    "Record consumption"
-                }
+                Link {
 
-                p {
-                    "Manage consumpitions"
+                    to: Routes::ConsumablesManage {},
+                    onclick: move |_| {
+                        is_expanded.set(false);
+                    },
+
+                    "Manage consumables"
                 }
             }
         }

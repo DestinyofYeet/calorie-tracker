@@ -3,12 +3,9 @@ use crate::{
         components::{Button, Spinner, TextBox},
         Routes,
     },
-    server::routes::v1::user::login_user,
+    server::{dtos::LoginUser, routes::v1::user::login_user},
 };
-use dioxus::{
-    fullstack::{HeaderMap, HeaderValue},
-    prelude::*,
-};
+use dioxus::prelude::*;
 
 #[component]
 pub fn UserLogin() -> Element {
@@ -23,27 +20,41 @@ pub fn UserLogin() -> Element {
     let mut button_disabled = use_signal(|| false);
     let mut error = use_signal(String::new);
 
-    let login_user = move || async move {
-        match login_user(email(), password()).await {
-            Ok(_) => Some(()),
-            Err(e) => {
-                error.set(e.to_string());
-                None
-            }
-        }
+    let mut login_user = move || {
+        button_disabled.set(true);
+        spawn(async move {
+            let nav = navigator();
+            let login_user_obj = LoginUser {
+                email: email(),
+                password: password(),
+            };
+
+            match login_user(login_user_obj).await {
+                Ok(_) => {
+                    nav.replace(Routes::Landing {});
+                }
+                Err(e) => {
+                    error.set(e.to_string());
+                    button_disabled.set(false);
+                }
+            };
+        });
     };
 
     rsx! {
-        div {
-            class: Style::wrapper_wrapper,
+        div { class: Style::wrapper_wrapper,
 
-            div {
-                class: Style::create_wrapper,
+            div { class: Style::create_wrapper,
 
                 div {}
 
-                div {
+                form {
                     class: Style::create,
+
+                    onsubmit: move |evt| {
+                        evt.prevent_default();
+                        login_user()
+                    },
 
                     "Login to Calorie-Tracker"
 
@@ -54,7 +65,7 @@ pub fn UserLogin() -> Element {
                     TextBox {
                         placeholder: "Email",
                         kind: "Email",
-                        on_input: move |e: Event<FormData>| {email.set(e.value())}
+                        on_input: move |e: Event<FormData>| { email.set(e.value()) },
                     }
 
                     "Password"
@@ -62,52 +73,29 @@ pub fn UserLogin() -> Element {
                     TextBox {
                         placeholder: "Password",
                         kind: "Password",
-                        on_input: move |e: Event<FormData>| {password.set(e.value())}
+                        on_input: move |e: Event<FormData>| { password.set(e.value()) },
                     }
 
                     if !button_disabled() {
                         Button {
                             disabled: button_disabled,
                             on_click: move |_| {
-                                button_disabled.set(true);
-                                spawn(async move {
-                                    match login_user().await {
-                                        Some(_) => {
-                                            navigator().replace(Routes::Landing {});
-
-                                        },
-                                        None => {
-                                            button_disabled.set(false);
-                                        },
-                                    }
-                                });
+                                login_user();
                             },
 
                             "Login"
                         }
 
                         if !error().is_empty() {
-                            p {
-                                class: "error",
-
-                                {error()}
-                            }
+                            p { class: "error", {error()} }
                         }
                     } else {
-                        div {
-                            class: Style::spinner_wrapper,
-                            p {
-                                style: "margin: 0;",
-                                "Logging in"
-                            }
-                            div {
-                                class: Style::spinner,
-
-                                Spinner {}
-                            }
+                        div { class: Style::spinner_wrapper,
+                            p { style: "margin: 0;", "Logging in" }
+                            div { class: Style::spinner, Spinner {} }
                         }
                     }
-
+                
                 }
             }
         }

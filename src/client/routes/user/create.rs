@@ -5,7 +5,7 @@ use crate::{
         components::{Button, Spinner, TextBox},
         Routes,
     },
-    server::routes::v1::user::create_user,
+    server::{dtos::CreateUser, routes::v1::user::create_user},
 };
 
 #[component]
@@ -22,7 +22,13 @@ pub fn UserCreate() -> Element {
     let mut error = use_signal(String::new);
 
     let create_user = move || async move {
-        match create_user(username(), email(), password()).await {
+        let create_user_obj = CreateUser {
+            username: username(),
+            email: email(),
+            password: password(),
+        };
+
+        match create_user(create_user_obj).await {
             Ok(_) => Some(()),
             Err(e) => {
                 error.set(e.to_string());
@@ -32,30 +38,26 @@ pub fn UserCreate() -> Element {
     };
 
     rsx! {
-        div {
+        div { class: Style::wrapper_wrapper,
 
-            class: Style::wrapper_wrapper,
-
-            div {
-                class: Style::create_wrapper,
+            div { class: Style::create_wrapper,
 
                 div {}
 
-                div {
-                    class: Style::create,
+                div { class: Style::create,
 
                     "Username"
 
                     TextBox {
                         placeholder: "Username",
-                        on_input: move |e: Event<FormData>| {username.set(e.value())}
+                        on_input: move |e: Event<FormData>| { username.set(e.value()) },
                     }
 
                     "Email"
                     TextBox {
                         placeholder: "Email",
                         kind: "Email",
-                        on_input: move |e: Event<FormData>| {email.set(e.value())}
+                        on_input: move |e: Event<FormData>| { email.set(e.value()) },
                     }
 
                     "Password"
@@ -64,9 +66,8 @@ pub fn UserCreate() -> Element {
                         placeholder: "Password",
                         kind: "Password",
 
-                        on_input: move |e: Event<FormData>| {password.set(e.value())}
+                        on_input: move |e: Event<FormData>| { password.set(e.value()) },
                     }
-
 
                     if !button_disabled() {
                         Button {
@@ -75,13 +76,11 @@ pub fn UserCreate() -> Element {
                                 button_disabled.set(true);
                                 spawn(async move {
                                     match create_user().await {
-                                        None => {
-                                            button_disabled.set(false)
-                                        },
+
+                                        None => button_disabled.set(false),
                                         Some(_) => {
                                             let navigator = navigator();
                                             navigator.replace(Routes::UserLogin {});
-
                                         }
                                     }
                                 });
@@ -91,28 +90,16 @@ pub fn UserCreate() -> Element {
                         }
 
                         if !error().is_empty() {
-                            p {
-                                class: "error",
-
-                                {error()}
-                            }
+                            p { class: "error", {error()} }
                         }
                     } else {
-                        div {
-                            class: Style::spinner_wrapper,
-                            p {
-                                style: "margin: 0;",
-                                "Creating user"
-                            }
-                            div {
-                                class: Style::spinner,
-
-                                Spinner {}
-                            }
+                        div { class: Style::spinner_wrapper,
+                            p { style: "margin: 0;", "Creating user" }
+                            div { class: Style::spinner, Spinner {} }
                         }
                     }
                 }
-
+            
             }
         }
 

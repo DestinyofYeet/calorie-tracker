@@ -8,6 +8,4 @@ pub mod entry;
 
 pub mod routes;
 
-mod get_text;
-
-pub use get_text::*;
+pub mod dtos;
