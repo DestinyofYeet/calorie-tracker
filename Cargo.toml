@@ -8,7 +8,7 @@ edition = "2021"
 
 [dependencies]
 argon2 = { version = "0.5.3", optional = true, features = ["std"] }
-dioxus = { version = "0.7.1", features = ["fullstack", "router"] }
+dioxus = { version = "0.7.9", features = ["fullstack", "router"] }
 dioxus_style = "0.5.3"
 serde = { version = "1.0.228", features = ["derive"] }
 thiserror = "2.0.18"
@@ -18,6 +18,8 @@ django-rs = { git = "https://code.ole.blue/DestinyofYeet/django-rs.git", optiona
 uuid = { version = "1.23.1", features = ["v4"], optional = true }
 tower-cookies = "0.11.0"
 dioxus-free-icons = { version = "0.10.0", features = ["lucide"] }
+dioxus-primitives = { git = "https://github.com/DioxusLabs/components", version = "0.0.1", default-features = false }
+dioxus-icons = { version = "0.1.0", default-features = false }
 
 [features]
 default = []
