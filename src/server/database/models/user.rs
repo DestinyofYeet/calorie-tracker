@@ -2,21 +2,20 @@ use django_rs::{
     django_rs_macro::{FromIter, SaveData},
     models::{
         column::{ColumnType, CreateColumn, CreateOptions},
-        save::SaveModel,
         traits::model::Model,
         ModelIteration,
     },
 };
 
-#[derive(FromIter, Debug, SaveData)]
-pub struct User {
+#[derive(Clone, FromIter, Debug, SaveData)]
+pub struct UserDB {
     pub id: Option<i64>,
     pub name: String,
     pub email: String,
     pub hashed_password: String,
 }
 
-impl Model for User {
+impl Model for UserDB {
     const TABLE_NAME: &'static str = "User";
 
     fn get_migration() -> Vec<django_rs::models::ModelIteration> {

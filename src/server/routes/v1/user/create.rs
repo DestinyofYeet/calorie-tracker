@@ -82,7 +82,7 @@ pub async fn create_user(data: CreateUser) -> Result<(), CreateUserError> {
     use argon2::Argon2;
     use argon2::PasswordHasher;
 
-    use crate::server::database::models::user::User;
+    use crate::server::database::models::user::UserDB;
     use crate::server::entry::SERVER;
 
     if data.username.is_empty() {
@@ -111,7 +111,7 @@ pub async fn create_user(data: CreateUser) -> Result<(), CreateUserError> {
 
     let db = SERVER.get_database();
 
-    let exists = db.search_single_model::<User>(
+    let exists = db.search_single_model::<UserDB>(
         &db.get_connection(),
         SearchQuery::empty().add_constraint(("email", &data.email)),
     )?;
@@ -120,7 +120,7 @@ pub async fn create_user(data: CreateUser) -> Result<(), CreateUserError> {
         return Err(CreateUserError::EmailExists);
     }
 
-    let mut model = User {
+    let mut model = UserDB {
         id: None,
         name: data.username,
         email: data.email,

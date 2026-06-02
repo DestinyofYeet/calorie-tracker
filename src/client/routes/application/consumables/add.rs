@@ -2,7 +2,10 @@ use dioxus::{core::anyhow, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    client::components::{Button, Dialog, Select, Spacer, TextBox, TextBoxType},
+    client::{
+        components::{Button, Dialog, Select, Spacer, TextBox, TextBoxType},
+        Routes,
+    },
     dtos::food::{Consumable, NutritionEnergy, NutritionValueType, Nutritions, ValueParseError},
     server::routes::v1::user::consumables::create_consumable,
 };
@@ -108,7 +111,10 @@ pub fn ConsumablesAdd() -> Element {
                 };
 
                 match create_consumable(consumable).await {
-                    Ok(_) => {},
+                    Ok(_) => {
+                        let navigator = use_navigator();
+                        navigator.push(Routes::ConsumablesManage {  });
+                    },
                     Err(e) => {
                         dialog_text.set(format!("Failed to save consumable: {e}"));
                         dialog_open.set(true);

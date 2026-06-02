@@ -1,5 +1,9 @@
 use dioxus::{
-    fullstack::{extract::Request, response::Response},
+    fullstack::{
+        extract::Request,
+        response::{IntoResponse, Response},
+        Redirect,
+    },
     prelude::StatusCode,
     server::axum::middleware::Next,
 };
@@ -10,7 +14,7 @@ use tower_cookies::Cookies;
 use tracing::error;
 
 use crate::server::{
-    database::models::{login_token::LoginToken, user::User},
+    database::models::{login_token::LoginToken, user::UserDB},
     entry::SERVER,
 };
 
@@ -25,7 +29,11 @@ static WHITELIST_EXACT: [&str; 6] = [
     "/api/v1/user/is_authed",
 ];
 
-pub async fn run_authenticated_layer(cookies: Cookies, request: Request, next: Next) -> Response {
+pub async fn run_authenticated_layer(
+    cookies: Cookies,
+    mut request: Request,
+    next: Next,
+) -> Response {
     let uri_path = request.uri().path();
 
     if WHITELIST_STARTS_WITH
@@ -41,10 +49,7 @@ pub async fn run_authenticated_layer(cookies: Cookies, request: Request, next: N
 
     let db = SERVER.get_database();
 
-    let invalid_token_header_resp = Response::builder()
-        .status(StatusCode::BAD_REQUEST)
-        .body("unauthenticated".into())
-        .unwrap();
+    let invalid_token_header_resp = Redirect::temporary("/user/login").into_response();
 
     let header = match cookies.get("token") {
         Some(e) => e.value().to_string(),
@@ -68,7 +73,7 @@ pub async fn run_authenticated_layer(cookies: Cookies, request: Request, next: N
         return invalid_token_header_resp;
     }
 
-    let _user = match db.search_single_model::<User>(
+    let user = match db.search_single_model::<UserDB>(
         &db.get_connection(),
         SearchQuery::empty().add_constraint(("id", token.user_id)),
     ) {
@@ -84,6 +89,8 @@ pub async fn run_authenticated_layer(cookies: Cookies, request: Request, next: N
                 .unwrap();
         }
     };
+
+    request.extensions_mut().insert(user);
 
     next.run(request).await
 }

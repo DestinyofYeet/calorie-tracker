@@ -72,7 +72,7 @@ impl AsStatusCode for LoginUserError {
 
 #[post("/api/v1/user/login", cookies: Cookies)]
 pub async fn login_user(data: LoginUser) -> Result<(), LoginUserError> {
-    use crate::server::database::models::user::User;
+    use crate::server::database::models::user::UserDB;
     use argon2::{Argon2, PasswordHash, PasswordVerifier};
 
     if data.email.is_empty() {
@@ -85,7 +85,7 @@ pub async fn login_user(data: LoginUser) -> Result<(), LoginUserError> {
 
     let db = SERVER.get_database();
 
-    let user = db.search_single_model::<User>(
+    let user = db.search_single_model::<UserDB>(
         &db.get_connection(),
         SearchQuery::empty().add_constraint(("email", &data.email)),
     )?;

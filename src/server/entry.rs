@@ -15,7 +15,7 @@ use tracing_subscriber::EnvFilter;
 use crate::{
     client::App,
     server::{
-        database::models::{login_token::LoginToken, user::User},
+        database::models::{consumables::ConsumableDB, login_token::LoginToken, user::UserDB},
         layers::authenticated::run_authenticated_layer,
     },
 };
@@ -38,8 +38,9 @@ pub fn launch_server() {
 
     let db = SERVER.get_database();
 
-    db.migrate_model::<User>().unwrap();
+    db.migrate_model::<UserDB>().unwrap();
     db.migrate_model::<LoginToken>().unwrap();
+    db.migrate_model::<ConsumableDB>().unwrap();
 
     // let auth_middlware = axum::middleware::from_fn(f)
 
