@@ -17,10 +17,10 @@ rustPlatform.buildRustPackage rec {
 
   src = ../.;
 
-  cargoHash = "sha256-mt/syi+G/j18qVB8nJRsOdbeLbNN95tGTLYGIuzQ1Uo=";
+  cargoHash = "sha256-JtOQa7O3R0bj/CC1ddA4VgCAvfdwbBao0aQR6BzYlFI=";
 
   buildPhase = ''
-    dx bundle -r --web
+    dx build -r --web
   '';
 
   installPhase = ''
