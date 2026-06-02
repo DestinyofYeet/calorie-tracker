@@ -1952,7 +1952,7 @@ dependencies = [
 [[package]]
 name = "django-rs"
 version = "0.1.0"
-source = "git+https://code.ole.blue/DestinyofYeet/django-rs.git#4c9e39875076be2d1498c073027307983b4ba2d1"
+source = "git+https://code.ole.blue/DestinyofYeet/django-rs.git#b7f9ee66d68a5a5ea801e67fc6e0cdebad5e855d"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1963,6 +1963,7 @@ dependencies = [
  "rand 0.10.1",
  "rusqlite",
  "serde",
+ "serde_json",
  "thiserror 2.0.18",
  "tracing",
  "uuid",
@@ -1971,7 +1972,7 @@ dependencies = [
 [[package]]
 name = "django-rs-macro"
 version = "0.1.0"
-source = "git+https://code.ole.blue/DestinyofYeet/django-rs.git#4c9e39875076be2d1498c073027307983b4ba2d1"
+source = "git+https://code.ole.blue/DestinyofYeet/django-rs.git#b7f9ee66d68a5a5ea801e67fc6e0cdebad5e855d"
 dependencies = [
  "quote",
  "syn 2.0.117",
@@ -5353,9 +5354,9 @@ dependencies = [
 
 [[package]]
 name = "serde_json"
-version = "1.0.149"
+version = "1.0.150"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "83fc039473c5595ace860d8c4fafa220ff474b3fc6bfdb4293327f1a37e94d86"
+checksum = "e8014e44b4736ed0538adeecded0fce2a272f22dc9578a7eb6b2d9993c74cfb9"
 dependencies = [
  "itoa",
  "memchr",

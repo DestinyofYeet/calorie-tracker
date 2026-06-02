@@ -2,7 +2,7 @@ use dioxus::{core::anyhow, prelude::*};
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    client::components::{Button, Dialog, Select, Spacer, TextBox},
+    client::components::{Button, Dialog, Select, Spacer, TextBox, TextBoxType},
     dtos::food::{Consumable, NutritionEnergy, NutritionValueType, Nutritions, ValueParseError},
     server::routes::v1::user::consumables::create_consumable,
 };
@@ -31,6 +31,12 @@ pub fn ConsumablesAdd() -> Element {
 
     let mut dialog_open = use_signal(|| false);
     let mut dialog_text = use_signal(String::new);
+
+    let text_box_number_kind = TextBoxType::Number {
+        min: 0,
+        max: i64::MAX,
+        step: 0.01,
+    };
 
     rsx! {
         Dialog {
@@ -117,7 +123,7 @@ pub fn ConsumablesAdd() -> Element {
 
                 label { "Name" }
 
-                TextBox { name: "name", placeholder: "Name", required: true,}
+                TextBox { name: "name", placeholder: "Name", required: true, kind: TextBoxType::Text}
 
                 p {}
 
@@ -131,7 +137,7 @@ pub fn ConsumablesAdd() -> Element {
 
                 label { "Serving size" }
 
-                TextBox { name: "serving_size", placeholder: "0", required: true}
+                TextBox { name: "serving_size", placeholder: "0", required: true, kind: text_box_number_kind.clone()}
 
                 Select {
                     name: "serving_size_type",
@@ -142,7 +148,7 @@ pub fn ConsumablesAdd() -> Element {
 
                 label { "Energy" }
 
-                TextBox { name: "energy", placeholder: "Energy", required: true}
+                TextBox { name: "energy", placeholder: "Energy", required: true, kind: text_box_number_kind.clone()}
 
                 Select {
                     name: "energy_type",
@@ -153,7 +159,7 @@ pub fn ConsumablesAdd() -> Element {
 
                 label { "Fat" }
 
-                TextBox { name: "fat", placeholder: "0.0", required: true}
+                TextBox { name: "fat", placeholder: "0.0", required: true, kind: text_box_number_kind.clone(),}
 
                 Select {
                     name: "fat_type",
@@ -164,7 +170,7 @@ pub fn ConsumablesAdd() -> Element {
 
                 label { "Carbohydrates" }
 
-                TextBox { name: "carbohydrates", placeholder: "0.0", required: true }
+                TextBox { name: "carbohydrates", placeholder: "0.0", required: true, kind: text_box_number_kind.clone()}
 
                 Select {
                     name: "carbohydrates_type",
@@ -174,7 +180,7 @@ pub fn ConsumablesAdd() -> Element {
 
                 label { "Salt" }
 
-                TextBox { name: "salt", placeholder: "0.0", required: true }
+                TextBox { name: "salt", placeholder: "0.0", required: true, kind: text_box_number_kind.clone()}
 
                 Select {
                     name: "salt_type",
@@ -185,7 +191,7 @@ pub fn ConsumablesAdd() -> Element {
 
                 label { "Proteins" }
 
-                TextBox { name: "proteins", placeholder: "0.0", required: true }
+                TextBox { name: "proteins", placeholder: "0.0", required: true, kind: text_box_number_kind.clone()}
 
                 Select {
                     name: "proteins_type",

@@ -1,9 +1,33 @@
 use dioxus::prelude::*;
 
+#[derive(PartialEq, Clone)]
+pub enum TextBoxType {
+    Text,
+    Password,
+    Email,
+    Number { min: i64, max: i64, step: f64 },
+}
+
+impl std::fmt::Display for TextBoxType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_str(match self {
+            TextBoxType::Text => "text",
+            TextBoxType::Password => "password",
+
+            TextBoxType::Number {
+                min: _,
+                max: _,
+                step: _,
+            } => "number",
+            TextBoxType::Email => "email",
+        })
+    }
+}
+
 #[component]
 pub fn TextBox(
     placeholder: String,
-    kind: Option<String>,
+    kind: TextBoxType,
     on_input: Option<Callback<Event<FormData>>>,
     disabled_signal: Option<Signal<bool>>,
     required: Option<bool>,
@@ -16,6 +40,19 @@ pub fn TextBox(
 
     let disabled = disabled_signal.unwrap_or_else(|| use_signal(|| false));
 
+    let mut number_min: Option<i64> = None;
+    let mut number_max: Option<i64> = None;
+    let mut number_step: Option<f64> = None;
+
+    match kind {
+        TextBoxType::Number { min, max, step } => {
+            number_min = Some(min);
+            number_max = Some(max);
+            number_step = Some(step);
+        }
+        _ => {}
+    }
+
     rsx! {
         input {
             class: Style::input,
@@ -27,7 +64,11 @@ pub fn TextBox(
             name,
 
             placeholder,
-            r#type: if kind.is_some() { kind.unwrap() },
+            r#type: kind.to_string(),
+
+            min: number_min,
+            max: number_max,
+            step: number_step,
 
             oninput: {
                 move |e| {

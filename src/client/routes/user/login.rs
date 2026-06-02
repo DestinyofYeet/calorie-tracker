@@ -1,6 +1,6 @@
 use crate::{
     client::{
-        components::{Button, Spinner, TextBox},
+        components::{Button, Spinner, TextBox, TextBoxType},
         Routes,
     },
     dtos::LoginUser,
@@ -65,7 +65,7 @@ pub fn UserLogin() -> Element {
 
                     TextBox {
                         placeholder: "Email",
-                        kind: "Email",
+                        kind: TextBoxType::Email,
                         on_input: move |e: Event<FormData>| { email.set(e.value()) },
                     }
 
@@ -73,7 +73,7 @@ pub fn UserLogin() -> Element {
 
                     TextBox {
                         placeholder: "Password",
-                        kind: "Password",
+                        kind: TextBoxType::Password,
                         on_input: move |e: Event<FormData>| { password.set(e.value()) },
                     }
 

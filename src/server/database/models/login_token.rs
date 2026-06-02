@@ -3,7 +3,6 @@ use django_rs::{
     django_rs_macro::{FromIter, SaveData},
     models::{
         column::{ColumnType, CreateColumn, CreateOptions},
-        save::SaveModel,
         traits::model::Model,
         ModelIteration,
     },

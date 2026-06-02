@@ -6,10 +6,11 @@ use django_rs::{
         ModelIteration,
     },
 };
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, SaveData, FromIter)]
+#[derive(Debug, SaveData, FromIter, Serialize, Deserialize)]
 pub struct ConsumableInfo {
-    pub id: Option<id>,
+    pub id: Option<i64>,
     pub name: String,
 }
 

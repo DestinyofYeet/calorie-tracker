@@ -2,7 +2,7 @@ use dioxus::prelude::*;
 
 use crate::{
     client::{
-        components::{Button, Spinner, TextBox},
+        components::{Button, Spinner, TextBox, TextBoxType},
         Routes,
     },
     dtos::CreateUser,
@@ -50,6 +50,7 @@ pub fn UserCreate() -> Element {
                     "Username"
 
                     TextBox {
+                        kind: TextBoxType::Text,
                         placeholder: "Username",
                         on_input: move |e: Event<FormData>| { username.set(e.value()) },
                     }
@@ -57,7 +58,7 @@ pub fn UserCreate() -> Element {
                     "Email"
                     TextBox {
                         placeholder: "Email",
-                        kind: "Email",
+                        kind: TextBoxType::Email,
                         on_input: move |e: Event<FormData>| { email.set(e.value()) },
                     }
 
@@ -65,7 +66,7 @@ pub fn UserCreate() -> Element {
 
                     TextBox {
                         placeholder: "Password",
-                        kind: "Password",
+                        kind: TextBoxType::Password,
 
                         on_input: move |e: Event<FormData>| { password.set(e.value()) },
                     }
