@@ -43,6 +43,9 @@ pub fn SiteOverlay(children: Element) -> Element {
 
         Blackout {
             enabled: is_expanded,
+            on_click: move |_| {
+                is_expanded.set(false);
+            }
         }
 
         div {

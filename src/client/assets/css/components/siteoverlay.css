@@ -76,4 +76,6 @@ a {
 
 a:hover {
   text-decoration: none;
+  background-color: var(--color-accent-1);
+  color: black;
 }
