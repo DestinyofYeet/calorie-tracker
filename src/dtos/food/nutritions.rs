@@ -3,7 +3,7 @@ use std::{convert::Infallible, str::FromStr, string::ParseError};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct Nutritions {
     pub energy: NutritionEnergy,
     pub fat: NutritionValueType,
@@ -15,7 +15,7 @@ pub struct Nutritions {
     pub extra_values: Vec<NutritionValue>,
 }
 
-#[derive(Debug, Deserialize, Serialize)]
+#[derive(Debug, Deserialize, Serialize, Clone, PartialEq)]
 pub enum NutritionValueType {
     Gram(f64),
     Kilogram(f64),
@@ -27,6 +27,16 @@ impl NutritionValueType {
             .iter()
             .map(|(key, value)| (key.to_string(), value.to_string()))
             .collect()
+    }
+}
+
+impl std::fmt::Display for NutritionValueType {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let (value, unit): (&f64, &'static str) = match self {
+            NutritionValueType::Gram(value) => (value, "g"),
+            NutritionValueType::Kilogram(value) => (value, "kg"),
+        };
+        f.write_fmt(format_args!("{} {}", value, unit))
     }
 }
 
@@ -72,7 +82,7 @@ impl TryFrom<(String, String)> for NutritionValueType {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct NutritionEnergy {
     kcal: f64,
 }
@@ -89,7 +99,13 @@ impl NutritionEnergy {
     }
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+impl std::fmt::Display for NutritionEnergy {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.write_fmt(format_args!("{} kcal", self.kcal))
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct NutritionValue {
     key: String,
     value: NutritionValueType,

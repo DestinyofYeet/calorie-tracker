@@ -5,6 +5,8 @@
   padding: 0.5rem;
 
   border: 2px solid var(--color-accent-1);
+
+  cursor: pointer;
 }
 
 .button:disabled {

@@ -34,6 +34,7 @@ pub fn TextBox(
     initial_value: Option<String>,
     id: Option<String>,
     name: Option<String>,
+    children: Element,
 ) -> Element {
     #[css_module("/src/client/assets/css/components/text_box.css")]
     struct Style;
@@ -44,13 +45,10 @@ pub fn TextBox(
     let mut number_max: Option<i64> = None;
     let mut number_step: Option<f64> = None;
 
-    match kind {
-        TextBoxType::Number { min, max, step } => {
-            number_min = Some(min);
-            number_max = Some(max);
-            number_step = Some(step);
-        }
-        _ => {}
+    if let TextBoxType::Number { min, max, step } = kind {
+        number_min = Some(min);
+        number_max = Some(max);
+        number_step = Some(step);
     }
 
     rsx! {
@@ -77,6 +75,8 @@ pub fn TextBox(
                     }
                 }
             },
+
+            {children}
         }
     }
 }

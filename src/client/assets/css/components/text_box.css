@@ -4,5 +4,9 @@
   border-radius: 1rem;
   padding: 0.5rem;
 
-  border: 2px solid var(--color-accent-1)
+  border: 2px solid var(--color-accent-1);
+}
+
+input:focus {
+  outline: none;
 }

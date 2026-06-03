@@ -1,0 +1,12 @@
+.title {}
+
+.data {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 1rem;
+}
+
+.dataheader {
+  text-decoration: underline;
+  font-weight: 700;
+}
