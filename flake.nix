@@ -32,5 +32,31 @@
       packages.x86_64-linux = {
         default = pkgs.callPackage ./nix/pkg.nix { flake = self; };
       };
+
+      formatter.x86_64-linux =
+        let
+          script = pkgs.writeShellScriptBin "fmt" ''
+            set -euo pipefail
+
+            dx fmt
+          '';
+        in
+        pkgs.symlinkJoin {
+          name = "fmt";
+          paths = [ script ] ++ (import ./nix/buildInputs.nix { inherit pkgs inputs; });
+          buildInputs = [ pkgs.makeWrapper ];
+          postBuild = "wrapProgram $out/bin/fmt --prefix PATH : $out/bin";
+        };
+
+      checks.x86_64-linux = {
+        formatter = pkgs.stdenv.mkDerivation {
+          name = "dx-fmt-check";
+          src = ./.;
+          nativeBuildInputs = import ./nix/buildInputs.nix { inherit pkgs inputs; };
+          buildPhase = ''
+            dx fmt -c
+          '';
+        };
+      };
     };
 }
