@@ -2,11 +2,26 @@
 
 .data {
   display: grid;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto auto auto;
   gap: 1rem;
+
+  justify-content: center;
+  align-items: center;
 }
 
 .dataheader {
   text-decoration: underline;
   font-weight: 700;
+}
+
+.links {
+  display: flex;
+
+  justify-content: center;
+  align-items: center;
+
+  background-color: var(--color-accent-1);
+  border-radius: 10px;
+
+  padding: 0.25rem;
 }

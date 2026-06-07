@@ -21,7 +21,7 @@
 .items {
   display: grid;
   margin: 0rem 2rem;
-  grid-template-columns: auto auto;
+  grid-template-columns: auto auto auto;
   justify-content: center;
   align-items: center;
 

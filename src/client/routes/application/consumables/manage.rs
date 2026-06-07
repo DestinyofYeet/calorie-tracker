@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_free_icons::{
-    icons::ld_icons::{LdPlus, LdSearch},
+    icons::ld_icons::{LdPen, LdPlus, LdSearch},
     Icon,
 };
 use tracing::Instrument;
@@ -60,6 +60,7 @@ pub fn ConsumablesManage() -> Element {
                 rsx! {
                     div { class: Style::items,
 
+                        p {}
                         p { class: Style::gridheaderitem, "Name" }
                         p { class: Style::gridheaderitem, "Data" }
 
@@ -89,6 +90,23 @@ pub fn RenderConsumableRow(consumable: Consumable) -> Element {
     struct Style;
 
     rsx! {
+        p {
+            class: Style::data,
+
+            Link {
+                to: Routes::ConsumableModify { consumable_id: consumable.id.unwrap() },
+
+                p {
+
+                    class: Style::links,
+
+                    Icon {
+                        icon: LdPen
+                    }
+                }
+
+            }
+        }
         p { class: Style::title, Link { to: Routes::ConsumableModify { consumable_id: consumable.id.unwrap() }, {consumable.name} }}
         div { class: Style::data,
             p { {consumable.nutritions.energy.to_string()} }
