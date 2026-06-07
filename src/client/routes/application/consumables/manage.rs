@@ -1,9 +1,8 @@
 use dioxus::prelude::*;
 use dioxus_free_icons::{
-    icons::ld_icons::{LdPen, LdPlus, LdSearch},
+    icons::ld_icons::{LdPen, LdPlus},
     Icon,
 };
-use tracing::Instrument;
 
 use crate::{
     client::{
@@ -90,24 +89,28 @@ pub fn RenderConsumableRow(consumable: Consumable) -> Element {
     struct Style;
 
     rsx! {
-        p {
-            class: Style::data,
+        p { class: Style::data,
 
             Link {
-                to: Routes::ConsumableModify { consumable_id: consumable.id.unwrap() },
+                to: Routes::ConsumableModify {
+                    consumable_id: consumable.id.unwrap(),
+                },
 
-                p {
+                p { class: Style::links,
 
-                    class: Style::links,
-
-                    Icon {
-                        icon: LdPen
-                    }
+                    Icon { icon: LdPen }
                 }
 
             }
         }
-        p { class: Style::title, Link { to: Routes::ConsumableModify { consumable_id: consumable.id.unwrap() }, {consumable.name} }}
+        p { class: Style::title,
+            Link {
+                to: Routes::ConsumableModify {
+                    consumable_id: consumable.id.unwrap(),
+                },
+                {consumable.name}
+            }
+        }
         div { class: Style::data,
             p { {consumable.nutritions.energy.to_string()} }
             p { {consumable.nutritions.fat.to_string() + " fat"} }

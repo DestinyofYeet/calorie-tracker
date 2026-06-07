@@ -74,8 +74,6 @@ impl ConsumableDB {
                 }
             };
 
-            dbg!(&consumable_db);
-
             db.save_model(&trx, &mut consumable_db)?;
 
             db.manage_transaction(trx, TransactionOptions::Commit)?;

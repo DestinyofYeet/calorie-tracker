@@ -43,7 +43,7 @@ pub fn ConsumablesAdd() -> Element {
                         dialog_text.set(e.to_string());
                         dialog_open.set(true);
                         return;
-                    },
+                    }
                 };
 
                 match create_consumable(consumable).await {

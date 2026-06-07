@@ -19,8 +19,9 @@ rustPlatform.buildRustPackage rec {
 
   cargoHash = "sha256-JtOQa7O3R0bj/CC1ddA4VgCAvfdwbBao0aQR6BzYlFI=";
 
+  # without '--debug-symbols false' the wasm-opt fails with a core-dumped error :)
   buildPhase = ''
-    dx build -r --web
+    CI=true dx bundle -r --web --debug-symbols false
   '';
 
   installPhase = ''

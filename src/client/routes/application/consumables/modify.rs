@@ -24,13 +24,10 @@ pub fn ConsumableModify(consumable_id: i64) -> Element {
 
     let consumable = use_resource(move || async move { get_consumable(consumable_id).await });
     rsx! {
-        Dialog {
-            text: dialog_text,
-            open: dialog_open,
-        }
+        Dialog { text: dialog_text, open: dialog_open }
 
         match consumable.read().as_ref() {
-            None => rsx!{ "Loading consumable..."},
+            None => rsx! { "Loading consumable..." },
             Some(Err(e)) => {
                 dialog_text.set(format!("Failed to load consumable: {}", e));
                 dialog_open.set(true);
@@ -47,7 +44,7 @@ pub fn ConsumableModify(consumable_id: i64) -> Element {
                             evt.prevent_default();
 
                             let values: ConsumablesForm = match evt.parsed_values() {
-                                Ok(value)   => value,
+                                Ok(value) => value,
                                 Err(e) => {
                                     dialog_text.set(format!("Failed to parse form:\n{e}"));
                                     dialog_open.set(true);
@@ -70,19 +67,17 @@ pub fn ConsumableModify(consumable_id: i64) -> Element {
                                 Ok(_) => {
                                     let navigator = use_navigator();
                                     navigator.push(Routes::ConsumablesManage {});
-                                },
+                                }
                                 Err(e) => {
                                     dialog_text.set(format!("Failed to update consumable: {e}"));
                                     dialog_open.set(true);
-                                },
+                                }
                             }
                         },
 
                         h3 { "Modify a consumable" }
 
-                        ShowConsumable {
-                            consumable: value.clone(),
-                        }
+                        ShowConsumable { consumable: value.clone() }
 
                         Spacer { rem: 2 }
 

@@ -1,5 +1,3 @@
-use std::fmt::Display;
-
 use dioxus::prelude::*;
 
 use crate::client::components::{Blackout, Button};

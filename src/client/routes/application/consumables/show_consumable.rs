@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
 use crate::{
-    client::components::{Select, SelectValue, TextBox, TextBoxType},
+    client::components::{Select, TextBox, TextBoxType},
     dtos::consumable::{
         Consumable, NutritionEnergy, NutritionValueType, Nutritions, ValueParseError,
     },
@@ -114,7 +114,7 @@ pub fn ShowConsumable(consumable: Option<Consumable>) -> Element {
                 placeholder: "Name",
                 required: true,
                 kind: TextBoxType::Text,
-                initial_value: consumable.as_ref().map(|e| e.name.clone())
+                initial_value: consumable.as_ref().map(|e| e.name.clone()),
             }
 
             p {}
@@ -132,7 +132,7 @@ pub fn ShowConsumable(consumable: Option<Consumable>) -> Element {
                 placeholder: "0",
                 required: true,
                 kind: text_box_number_kind.clone(),
-                initial_value: consumable.as_ref().map(|e| e.nutritions.serving_size.get_value().to_string())
+                initial_value: consumable.as_ref().map(|e| e.nutritions.serving_size.get_value().to_string()),
             }
 
             Select {
@@ -158,7 +158,7 @@ pub fn ShowConsumable(consumable: Option<Consumable>) -> Element {
                 placeholder: "Energy",
                 required: true,
                 kind: text_box_number_kind.clone(),
-                initial_value: consumable.as_ref().map(|value| value.nutritions.energy.kcal.to_string())
+                initial_value: consumable.as_ref().map(|value| value.nutritions.energy.kcal.to_string()),
             }
 
             Select {
@@ -175,7 +175,7 @@ pub fn ShowConsumable(consumable: Option<Consumable>) -> Element {
                 placeholder: "0.0",
                 required: true,
                 kind: text_box_number_kind.clone(),
-                initial_value: consumable.as_ref().map(|value| value.nutritions.fat.get_value().to_string())
+                initial_value: consumable.as_ref().map(|value| value.nutritions.fat.get_value().to_string()),
             }
 
             Select {
@@ -186,7 +186,7 @@ pub fn ShowConsumable(consumable: Option<Consumable>) -> Element {
                     Some(value) => {
                         let key = value.nutritions.fat.get_key();
                         NutritionValueType::get_options_selected(key)
-                    },
+                    }
                     None => NutritionValueType::get_options(),
                 },
             }
@@ -198,7 +198,9 @@ pub fn ShowConsumable(consumable: Option<Consumable>) -> Element {
                 placeholder: "0.0",
                 required: true,
                 kind: text_box_number_kind.clone(),
-                initial_value: consumable.as_ref().map(|value| value.nutritions.carbohydrates.get_value().to_string())
+                initial_value: consumable
+                    .as_ref()
+                    .map(|value| value.nutritions.carbohydrates.get_value().to_string()),
             }
 
             Select {
@@ -208,8 +210,8 @@ pub fn ShowConsumable(consumable: Option<Consumable>) -> Element {
                     Some(value) => {
                         let key = value.nutritions.carbohydrates.get_key();
                         NutritionValueType::get_options_selected(key)
-                    },
-                    None => NutritionValueType::get_options()
+                    }
+                    None => NutritionValueType::get_options(),
                 },
             }
 
@@ -220,7 +222,7 @@ pub fn ShowConsumable(consumable: Option<Consumable>) -> Element {
                 placeholder: "0.0",
                 required: true,
                 kind: text_box_number_kind.clone(),
-                initial_value: consumable.as_ref().map(|value| value.nutritions.salt.get_value().to_string())
+                initial_value: consumable.as_ref().map(|value| value.nutritions.salt.get_value().to_string()),
             }
 
             Select {
@@ -232,8 +234,8 @@ pub fn ShowConsumable(consumable: Option<Consumable>) -> Element {
                         let key = value.nutritions.salt.get_key();
                         NutritionValueType::get_options_selected(key)
 
-                    },
-                    None => NutritionValueType::get_options()
+                    }
+                    None => NutritionValueType::get_options(),
                 },
             }
 
@@ -244,7 +246,7 @@ pub fn ShowConsumable(consumable: Option<Consumable>) -> Element {
                 placeholder: "0.0",
                 required: true,
                 kind: text_box_number_kind.clone(),
-                initial_value: consumable.as_ref().map(|value| value.nutritions.proteins.get_value().to_string())
+                initial_value: consumable.as_ref().map(|value| value.nutritions.proteins.get_value().to_string()),
             }
 
             Select {
@@ -255,8 +257,8 @@ pub fn ShowConsumable(consumable: Option<Consumable>) -> Element {
                     Some(value) => {
                         let key = value.nutritions.proteins.get_key();
                         NutritionValueType::get_options_selected(key)
-                    },
-                    None => NutritionValueType::get_options()
+                    }
+                    None => NutritionValueType::get_options(),
                 },
             }
         }
