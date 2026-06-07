@@ -1,9 +1,7 @@
+use crate::dtos::consumable::Consumable;
 use dioxus::{fullstack::AsStatusCode, prelude::*};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
-
-use crate::dtos::consumable::Consumable;
-
 #[cfg(feature = "server")]
 use {
     crate::server::database::models::consumables::ConsumableDB,
@@ -12,44 +10,41 @@ use {
 };
 
 #[derive(Error, Debug, Serialize, Deserialize)]
-pub enum CreateConsumableError {
+pub enum UpdateConsumableError {
     #[error("Server error: {0}")]
     ServerFn(String),
 
     #[error("Database error")]
-    Database,
+    DatabaseError,
 }
 
-impl From<ServerFnError> for CreateConsumableError {
+impl From<ServerFnError> for UpdateConsumableError {
     fn from(value: ServerFnError) -> Self {
         Self::ServerFn(value.to_string())
     }
 }
 
 #[cfg(feature = "server")]
-impl From<DatabaseStrategyError> for CreateConsumableError {
+impl From<DatabaseStrategyError> for UpdateConsumableError {
     fn from(value: DatabaseStrategyError) -> Self {
         error!("Database error: {}", value.to_string());
-        Self::Database
+        Self::DatabaseError
     }
 }
 
-impl AsStatusCode for CreateConsumableError {
+impl AsStatusCode for UpdateConsumableError {
     fn as_status_code(&self) -> StatusCode {
         match self {
-            CreateConsumableError::Database | CreateConsumableError::ServerFn(_) => {
+            UpdateConsumableError::DatabaseError | UpdateConsumableError::ServerFn(_) => {
                 StatusCode::INTERNAL_SERVER_ERROR
             }
         }
     }
 }
 
-#[post("/api/v1/consumables", user: Extension<UserDB>)]
-pub async fn create_consumable(mut data: Consumable) -> Result<(), CreateConsumableError> {
-    // discard user provided id
-    data.id = None;
-
+#[put("/api/v1/consumables", user: Extension<UserDB>)]
+pub async fn update_consumable(data: Consumable) -> Result<(), UpdateConsumableError> {
+    // this function also checks if the consumable belongs to the user
     ConsumableDB::save_consumable(data, &user)?;
-
     Ok(())
 }

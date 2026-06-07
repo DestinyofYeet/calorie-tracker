@@ -1,7 +1,7 @@
 use dioxus::prelude::*;
 
 use crate::client::{
-    components::{Blackout, Button},
+    components::{Blackout, Button, Spacer},
     Routes,
 };
 use dioxus_free_icons::{
@@ -17,6 +17,20 @@ pub fn SiteOverlay(children: Element) -> Element {
     let mut is_expanded = use_signal(|| false);
 
     let title = "Calorie Tracker";
+
+    let mk_site_entry = |to: Routes, text: &'static str| -> Element {
+        rsx! {
+
+            Link {
+                to,
+                onclick: move |_| {
+                    is_expanded.set(false);
+                },
+
+                {text}
+            }
+        }
+    };
 
     rsx! {
         div {
@@ -45,7 +59,7 @@ pub fn SiteOverlay(children: Element) -> Element {
             enabled: is_expanded,
             on_click: move |_| {
                 is_expanded.set(false);
-            }
+            },
         }
 
         div {
@@ -75,29 +89,13 @@ pub fn SiteOverlay(children: Element) -> Element {
                 }
             }
 
+            Spacer { rem: 2 }
+
             div { class: Style::sidebaritems,
 
-                p { "Dashboard" }
-
-                Link {
-
-                    to: Routes::ConsumptionAdd {},
-                    onclick: move |_| {
-                        is_expanded.set(false);
-                    },
-
-                    "[DEV] Record consumption"
-                }
-
-                Link {
-
-                    to: Routes::ConsumablesManage {},
-                    onclick: move |_| {
-                        is_expanded.set(false);
-                    },
-
-                    "Manage consumables"
-                }
+                {mk_site_entry(Routes::ApplicationStart {}, "Dashboard")}
+                {mk_site_entry(Routes::ConsumptionManage {}, "Manage consumption")}
+                {mk_site_entry(Routes::ConsumablesManage {}, "Manage consumables")}
             }
         }
     }

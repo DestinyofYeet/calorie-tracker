@@ -1,5 +1,5 @@
 use crate::{
-    dtos::food::{Consumable, Nutritions},
+    dtos::consumable::{Consumable, Nutritions},
     server::database::models::consumables::ConsumableDB,
 };
 

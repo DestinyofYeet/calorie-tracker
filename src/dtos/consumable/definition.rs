@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 
-use crate::dtos::food::Nutritions;
+use crate::dtos::consumable::Nutritions;
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct Consumable {

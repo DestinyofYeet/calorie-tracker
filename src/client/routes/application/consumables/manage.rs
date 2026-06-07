@@ -10,7 +10,7 @@ use crate::{
         components::{Button, TextBox, TextBoxType},
         Routes,
     },
-    dtos::food::Consumable,
+    dtos::consumable::Consumable,
     server::routes::v1::user::consumables::get_consumables,
 };
 
@@ -23,61 +23,62 @@ pub fn ConsumablesManage() -> Element {
 
     let mut search_input = use_signal(String::new);
     rsx! {
-        div {
-            class: Style::header,
+        div { class: Style::header,
 
             "Manage consumables"
 
-            TextBox { placeholder: "Search", kind: TextBoxType::Text,
+            TextBox {
+                placeholder: "Search",
+                kind: TextBoxType::Text,
                 on_input: move |e: Event<FormData>| {
                     search_input.set(e.value());
-                }
+                },
             }
 
-            Link { to: Routes::ConsumablesAdd {}, Button {
-                div {
-                    class: Style::centerbuttoncontent,
+            Link { to: Routes::ConsumablesAdd {},
+                Button {
+                    div { class: Style::centerbuttoncontent,
 
-                    "Add"
-                    Icon {
-                        icon: LdPlus {}
+                        "Add"
+                        Icon { icon: LdPlus {} }
                     }
                 }
-            }}
+            }
         }
 
         match &*consumables.read() {
-            None => rsx!{ p { "Loading consumables" } },
-            Some(Err(e)) => rsx!{
-                p { "Failed to load consumables: " {e.to_string()} }
+            None => rsx! {
+                p { "Loading consumables" }
+            },
+            Some(Err(e)) => rsx! {
+                p {
+                    "Failed to load consumables: "
+                    {e.to_string()}
+                }
             },
             Some(Ok(value)) => {
                 rsx! {
-                    div {
-                        class: Style::items,
+                    div { class: Style::items,
 
-                        p {
-                            class: Style::gridheaderitem,
-                            "Name"
-                        }
-                        p {
-                            class: Style::gridheaderitem,
-                            "Data"
-                        }
+                        p { class: Style::gridheaderitem, "Name" }
+                        p { class: Style::gridheaderitem, "Data" }
 
-                        for consumable in value.iter().filter(|element| {
-                            if search_input().is_empty() { true } else {
-                                element.name.starts_with(&search_input())
-                            }
-                        }) {
-                            RenderConsumableRow { consumable: consumable.clone()  }
+                        for consumable in value
+                            .iter()
+                            .filter(|element| {
+                                if search_input().is_empty() {
+                                    true
+                                } else {
+                                    element.name.starts_with(&search_input())
+                                }
+                            })
+                        {
+                            RenderConsumableRow { consumable: consumable.clone() }
                         }
                     }
-
                 }
             }
         }
-
 
     }
 }
@@ -88,11 +89,8 @@ pub fn RenderConsumableRow(consumable: Consumable) -> Element {
     struct Style;
 
     rsx! {
-        p { class: Style::title,
-            {consumable.name}
-        }
-        div {
-            class: Style::data,
+        p { class: Style::title, Link { to: Routes::ConsumableModify { consumable_id: consumable.id.unwrap() }, {consumable.name} }}
+        div { class: Style::data,
             p { {consumable.nutritions.energy.to_string()} }
             p { {consumable.nutritions.fat.to_string() + " fat"} }
         }

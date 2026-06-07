@@ -1,4 +1,5 @@
-pub mod food;
+pub mod consumable;
+pub mod consumption;
 
 mod create_user;
 mod login_user;

@@ -1,6 +1,8 @@
 use crate::client::components::SiteOverlay;
+use crate::client::routes::application::consumables::ConsumableModify;
 use crate::client::routes::application::consumables::{ConsumablesAdd, ConsumablesManage};
 use crate::client::routes::application::consumption::ConsumptionAdd;
+use crate::client::routes::application::consumption::ConsumptionManage;
 use crate::client::routes::application::start::ApplicationStart;
 use crate::client::routes::user::UserCreate;
 use crate::client::routes::user::UserLogin;
@@ -25,12 +27,20 @@ pub enum Routes {
 
     #[layout(SiteOverlayWrapper)]
     #[nest("/application")]
-        #[route("/consumption/add")]
-        ConsumptionAdd {},
+        #[nest("/consumption")]
+            #[route("/add")]
+            ConsumptionAdd {},
+        #[end_nest]
+        #[route("/consumption")]
+        ConsumptionManage {},
 
         #[nest("/consumables")]
-            #[route("/consumables/add")]
+            #[route("/add")]
             ConsumablesAdd {},
+            #[route("/:consumable_id")]
+            ConsumableModify {
+                consumable_id: i64
+            },
         #[end_nest]
         #[route("/consumables")]
         ConsumablesManage {},

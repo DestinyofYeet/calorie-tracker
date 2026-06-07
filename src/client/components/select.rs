@@ -2,8 +2,9 @@ use dioxus::prelude::*;
 
 #[derive(Eq, PartialEq, Clone)]
 pub struct SelectValue {
-    key: String,
-    value: String,
+    pub key: String,
+    pub value: String,
+    pub selected: bool,
 }
 
 impl From<(&str, &str)> for SelectValue {
@@ -11,6 +12,7 @@ impl From<(&str, &str)> for SelectValue {
         Self {
             key: value.0.to_string(),
             value: value.1.to_string(),
+            selected: false,
         }
     }
 }
@@ -20,6 +22,7 @@ impl From<(String, String)> for SelectValue {
         Self {
             key: value.0,
             value: value.1,
+            selected: false,
         }
     }
 }
@@ -40,10 +43,14 @@ where
     let values: Vec<SelectValue> = options.into_iter().map(Into::into).collect();
 
     rsx! {
-        select { class: Style::select, id, required, name,
+        select {
+            class: Style::select,
+            id,
+            required,
+            name,
 
             for value in values {
-                option { value: value.value, {value.key} }
+                option { value: value.value, selected: value.selected, {value.key} }
             }
         }
     }

@@ -9,7 +9,7 @@ use django_rs::{
 use serde::{Deserialize, Serialize};
 
 use crate::{
-    dtos::food::{NutritionEnergy, NutritionValue, NutritionValueType},
+    dtos::consumable::{NutritionEnergy, NutritionValue, NutritionValueType},
     server::database::models::user::UserDB,
 };
 

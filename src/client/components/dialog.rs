@@ -10,16 +10,14 @@ pub fn Dialog(text: Signal<String>, open: Signal<bool>) -> Element {
     struct Style;
 
     rsx! {
-        Blackout {
-            enabled: open,
-        }
+        Blackout { enabled: open }
 
         dialog {
             class: Style::dialog,
 
             id: "dialog",
             popover: true,
-            open: open,
+            open,
 
             {text()}
 

@@ -4,7 +4,7 @@ use django_rs::{
 };
 
 use crate::{
-    dtos::food::{Consumable, Nutritions},
+    dtos::consumable::{Consumable, Nutritions},
     server::{
         database::models::{consumables::ConsumableDB, user::UserDB},
         entry::SERVER,
@@ -73,6 +73,8 @@ impl ConsumableDB {
                     }
                 }
             };
+
+            dbg!(&consumable_db);
 
             db.save_model(&trx, &mut consumable_db)?;
 

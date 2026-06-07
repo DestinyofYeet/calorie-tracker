@@ -7,7 +7,7 @@ use {
 use dioxus::prelude::*;
 use thiserror::Error;
 use {
-    crate::dtos::food::Consumable,
+    crate::dtos::consumable::Consumable,
     dioxus::fullstack::AsStatusCode,
     serde::{Deserialize, Serialize},
 };
@@ -19,6 +19,9 @@ pub enum GetConsumableError {
 
     #[error("Server error: {0}")]
     ServerFn(String),
+
+    #[error("Consumable not found: {0}")]
+    NotFound(i64),
 }
 
 impl From<ServerFnError> for GetConsumableError {
@@ -41,6 +44,7 @@ impl AsStatusCode for GetConsumableError {
             GetConsumableError::ServerFn(_) | GetConsumableError::DatabaseError => {
                 StatusCode::INTERNAL_SERVER_ERROR
             }
+            GetConsumableError::NotFound(_) => StatusCode::BAD_REQUEST,
         }
     }
 }
@@ -52,4 +56,16 @@ pub async fn get_consumables() -> Result<Vec<Consumable>, GetConsumableError> {
     let consumables = ConsumableDB::get_consumable(None, &user)?;
 
     Ok(consumables)
+}
+
+#[get("/api/v1/consumables/:id", user: Extension<UserDB>)]
+pub async fn get_consumable(id: i64) -> Result<Consumable, GetConsumableError> {
+    use crate::server::database::models::consumables::ConsumableDB;
+
+    let consumables = ConsumableDB::get_consumable(Some(id), &user)?.pop();
+
+    match consumables {
+        Some(value) => Ok(value),
+        None => Err(GetConsumableError::NotFound(id)),
+    }
 }

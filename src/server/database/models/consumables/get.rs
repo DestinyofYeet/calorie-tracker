@@ -4,7 +4,7 @@ use django_rs::{
 };
 
 use crate::{
-    dtos::food::Consumable,
+    dtos::consumable::Consumable,
     server::{
         database::models::{consumables::ConsumableDB, user::UserDB},
         entry::SERVER,
@@ -20,7 +20,7 @@ impl ConsumableDB {
         let mut search_query = SearchQuery::empty().add_constraint(("user_id", user.id.unwrap()));
 
         if let Some(id) = id {
-            search_query = search_query.add_constraint(("id", id));
+            search_query = search_query.add_constraint(("id", id)).set_limit(1);
         }
 
         let models = db.search_multiple_model::<Self>(&db.get_connection(), search_query)?;

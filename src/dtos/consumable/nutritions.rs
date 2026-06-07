@@ -3,6 +3,8 @@ use std::{convert::Infallible, str::FromStr, string::ParseError};
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
+use crate::client::components::SelectValue;
+
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct Nutritions {
     pub energy: NutritionEnergy,
@@ -22,11 +24,38 @@ pub enum NutritionValueType {
 }
 
 impl NutritionValueType {
-    pub fn get_options() -> Vec<(String, String)> {
+    pub fn get_options() -> Vec<SelectValue> {
         [("g", "gram"), ("kg", "kilogram")]
             .iter()
             .map(|(key, value)| (key.to_string(), value.to_string()))
+            .map(Into::into)
             .collect()
+    }
+
+    pub fn get_options_selected(select_key: String) -> Vec<SelectValue> {
+        let mut options: Vec<SelectValue> = Self::get_options();
+
+        for option in options.iter_mut() {
+            if option.key == select_key {
+                option.selected = true;
+            }
+        }
+
+        options
+    }
+
+    pub fn get_value(&self) -> f64 {
+        match self {
+            NutritionValueType::Gram(value) | NutritionValueType::Kilogram(value) => *value,
+        }
+    }
+
+    pub fn get_key(&self) -> String {
+        match self {
+            NutritionValueType::Gram(_) => "g",
+            NutritionValueType::Kilogram(_) => "kg",
+        }
+        .to_string()
     }
 }
 
@@ -84,7 +113,7 @@ impl TryFrom<(String, String)> for NutritionValueType {
 
 #[derive(Debug, Serialize, Deserialize, Clone, PartialEq)]
 pub struct NutritionEnergy {
-    kcal: f64,
+    pub kcal: f64,
 }
 
 impl NutritionEnergy {
