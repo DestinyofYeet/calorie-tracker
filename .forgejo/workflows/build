@@ -1,3 +1,4 @@
+# currently broken, should work once gcc16 is the default gcc in pkgs.stdenv
 ---
 enable-email-notifications: true
 name: "Build"
