@@ -15,7 +15,16 @@ rustPlatform.buildRustPackage rec {
     inputs = flake.inputs;
   };
 
-  src = ../.;
+  src = lib.fileset.toSource {
+    root = ../.;
+    fileset = lib.fileset.unions [
+      ../src
+      ../Cargo.toml
+      ../Cargo.lock
+      ../Dioxus.toml
+      ../clippy.toml
+    ];
+  };
 
   cargoHash = "sha256-JtOQa7O3R0bj/CC1ddA4VgCAvfdwbBao0aQR6BzYlFI=";
 
@@ -30,7 +39,7 @@ rustPlatform.buildRustPackage rec {
   '';
 
   meta = with lib; {
-    mainProgram = pname;
+    mainProgram = "server";
     description = "A program";
     license = licenses.agpl3Only;
     platforms = platforms.all;
