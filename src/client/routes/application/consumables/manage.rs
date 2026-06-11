@@ -1,6 +1,6 @@
 use dioxus::prelude::*;
 use dioxus_free_icons::{
-    icons::ld_icons::{LdPen, LdPlus},
+    icons::ld_icons::{LdPen, LdPlus, LdSquarePen},
     Icon,
 };
 
@@ -98,7 +98,7 @@ pub fn RenderConsumableRow(consumable: Consumable) -> Element {
 
                 p { class: Style::links,
 
-                    Icon { icon: LdPen }
+                    Icon { icon: LdSquarePen }
                 }
 
             }
@@ -113,7 +113,7 @@ pub fn RenderConsumableRow(consumable: Consumable) -> Element {
         }
         div { class: Style::data,
             p { {consumable.nutritions.energy.to_string()} }
-            p { {consumable.nutritions.fat.to_string() + " fat"} }
+            // p { {consumable.nutritions.fat.to_string() + " fat"} }
         }
 
     }

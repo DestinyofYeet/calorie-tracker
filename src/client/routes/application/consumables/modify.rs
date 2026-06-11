@@ -81,7 +81,17 @@ pub fn ConsumableModify(consumable_id: i64) -> Element {
 
                         Spacer { rem: 2 }
 
-                        Button { "Save" }
+                        div {
+                            class: Style::submit_buttons,
+
+                            Button { on_click: move |_| {
+                                let navigator = use_navigator();
+                                navigator.push(Routes::ConsumablesManage {  } );
+
+                            }, "Cancel" }
+
+                            Button { "Save" }
+                        }
                     }
                 }
             }
