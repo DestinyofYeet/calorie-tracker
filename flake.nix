@@ -18,6 +18,10 @@
         overlays = [ (import inputs.rust-overlay) ];
         pkgs = import inputs.nixpkgs {
           inherit overlays system;
+          config = {
+            allowUnfree = true;
+            android_sdk.accept_license = true;
+          };
         };
 
       in

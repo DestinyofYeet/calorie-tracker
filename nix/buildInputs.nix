@@ -39,4 +39,6 @@ with pkgs;
   # linker
   clang
   wild
+
+  # androidenv.androidPkgs.androidsdk
 ]
