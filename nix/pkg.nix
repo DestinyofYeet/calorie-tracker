@@ -26,7 +26,7 @@ rustPlatform.buildRustPackage rec {
     ];
   };
 
-  cargoHash = "sha256-JtOQa7O3R0bj/CC1ddA4VgCAvfdwbBao0aQR6BzYlFI=";
+  cargoHash = "sha256-GJx/FlvJY6Rav8BZVvBcZTwQxlChN+813Cpok1sch3E";
 
   # without '--debug-symbols false' the wasm-opt fails with a core-dumped error :)
   buildPhase = ''

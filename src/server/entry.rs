@@ -5,7 +5,7 @@ use dioxus::{fullstack::Lazy, server::axum};
 use django_rs::{
     server::{
         database_strategy::{default_strategies::SqliteStrategy, DatabaseStrategy},
-        Server,
+        DjangoServer,
     },
     tasks::logstrategy::default_strategies::tracing_strategy::TracingStrategy,
 };
@@ -20,9 +20,9 @@ use crate::{
     },
 };
 
-pub static SERVER: Lazy<Server<SqliteStrategy>> = Lazy::new(async || {
+pub static SERVER: Lazy<DjangoServer<SqliteStrategy>> = Lazy::new(async || {
     let database_url = env::var("DATABASE_URL").expect("DATABASE_URL must be set!");
-    let server = Server::new(8, TracingStrategy {}, SqliteStrategy::new(database_url))
+    let server = DjangoServer::new(8, TracingStrategy {}, SqliteStrategy::new(database_url))
         .expect("To create server");
 
     dioxus::Ok(server)

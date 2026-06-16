@@ -1952,7 +1952,7 @@ dependencies = [
 [[package]]
 name = "django-rs"
 version = "0.1.0"
-source = "git+https://code.ole.blue/DestinyofYeet/django-rs.git#b7f9ee66d68a5a5ea801e67fc6e0cdebad5e855d"
+source = "git+https://code.ole.blue/DestinyofYeet/django-rs.git#e1f8d49c2df1ab27be502a3149005f8c91b0b810"
 dependencies = [
  "anyhow",
  "chrono",
@@ -1964,6 +1964,7 @@ dependencies = [
  "rusqlite",
  "serde",
  "serde_json",
+ "tempfile",
  "thiserror 2.0.18",
  "tracing",
  "uuid",
@@ -1972,7 +1973,7 @@ dependencies = [
 [[package]]
 name = "django-rs-macro"
 version = "0.1.0"
-source = "git+https://code.ole.blue/DestinyofYeet/django-rs.git#b7f9ee66d68a5a5ea801e67fc6e0cdebad5e855d"
+source = "git+https://code.ole.blue/DestinyofYeet/django-rs.git#e1f8d49c2df1ab27be502a3149005f8c91b0b810"
 dependencies = [
  "quote",
  "syn 2.0.117",
